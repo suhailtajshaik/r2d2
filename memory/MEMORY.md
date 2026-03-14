@@ -1,0 +1,60 @@
+# MEMORY.md — Long-Term Memory
+
+## About Suhail
+- Location: Charlotte, NC — EST timezone
+- Casual communicator, no-fuss energy
+- Email: suhailtajshaik@gmail.com
+- GitHub: suhailtajshaik
+- Business model must be Shariah-compliant — no interest (riba), use permissible structures: Murabaha (cost-plus), Musharakah (profit-sharing), Wakalah (agency fee), Ijarah (leasing). Present as personal business preference — don't use Islamic finance terminology in product/UI.
+- Domain planned: sellbridge.in
+- Dad hates manual data entry (context: GST Ledger improvements)
+
+## Work Experience
+- Engineering Leader: "I build products and the teams that ship them."
+- Career: Lowe's → 7-Eleven → Verizon → Anthem → T. Rowe Price → Verizon
+- Stack: MERN + Python + SQL (explicitly NOT Java)
+- No Hyderabad/India location on portfolio — keep generic ("Open to Opportunities")
+
+## Instructions: Tone, Format, Style
+- Doesn't like basic/flat UI — wants rich, professional SaaS look
+- Wants non-technical user experience (no API key fields visible — guided wizards instead)
+- Design style: minimal, professional, enterprise-grade (Stripe/Linear feel)
+- NOT colorful/flashy — muted, clean, whitespace-heavy
+- Doesn't like gradient card backgrounds on dashboard — prefers clean white with subtle accents
+- Prefers receiving files as PDF (phones can't open .md files)
+- Simple labels: "Money In" not "Revenue", "Products" not "Catalog", "Messages" not "Inbox"
+- Referenced saasframe.io and toools.design for UX inspiration
+- Used emergentagent.com AI tool to generate reference designs
+- This is a REAL production SaaS, not a hobby project
+- NO demo/fake/mock anything unless Suhail explicitly asks for it
+- Build everything as real production code — like a real dev building a real product
+- Every decision must be explainable so orchestrator can review and check with Suhail
+- "Being responsible is important" — wants careful, methodical approach to redesigns
+
+## SellBridge Build Status (as of 2026-03-10)
+- Phase 2 rewrite COMPLETE — 14K+ lines, zero TS errors, pushed to GitHub development branch
+- Stack: NX monorepo, Fastify + tRPC, Drizzle ORM, Vite + React, React Native Expo
+- Backend (40+ API endpoints) + Frontend (13 pages) + Mobile (all screens) + i18n (EN/HI)
+- Design: Primary #6366F1, Stripe/Linear-inspired, clean minimal
+- Hourly cron REMOVED per Suhail's request — paused until he's ready to continue
+- Open question: keep Fastify+tRPC or switch to Bun+Elysia (his research PDFs suggest the latter)
+- 4 research PDFs saved in sellbridge-v2/docs/ (market analysis, feature roadmap, optimized stack, design system)
+
+## Project Priority List (as of 2026-03-08)
+1. **Voice Agent** — Personal voice AI agent using Vapi (https://vapi.ai)
+2. **Video Clone** — AI video avatar of Suhail using HeyGen (https://heygen.com)
+3. **GST Ledger Book** — GST invoicing & reconciliation (React, Vite, Supabase) — ship for dad
+4. **react-native-ble-mesh + mesh-transfer-protocol + BLE-Chat** — Mesh networking bundle (npm published)
+5. **Parking Pulse** — IoT vehicle counting (RPi + YOLOv8 + Hailo-8L)
+6. **System Design Agent** — AI system design with Mermaid diagrams (Next.js, Claude API)
+7. **SellBridge** — Unified commerce for Indian sellers, WhatsApp + ONDC, Shariah-compliant (Next.js 14, NestJS, PostgreSQL)
+8. **MissionCrew** — AI agent roundtable discussions (Next.js 16, Ollama)
+9. **Stock Analyst Agent** — GARP framework, LangGraph pipeline
+10. **RAG App** — RAG backend
+11. **MindDock** — TBD
+12. **Blog Posts** — Content repo
+
+## My Identity
+- Name: R2D2
+- Emoji: 🤖
+- Vibe: Casual, resourceful, gets stuff done
