@@ -21,7 +21,25 @@ git clone git@github.com:suhailtajshaik/r2d2.git brain
 
 ---
 
-## Step 3 — Restore workspace files
+## Step 3 — Restore custom skills
+
+```bash
+cp -r /home/r2d2/brain/skills /home/r2d2/.openclaw/workspace/skills
+```
+
+Custom skills backed up (26 total):
+- `senior-*` — backend, frontend, fullstack, devops, security, secops, ML, data, QA, architect, prompt engineer, computer vision, data scientist
+- `ceo-advisor`, `cto-advisor` — executive advisory
+- `server-health` — VPS health monitoring
+- `send-document` — PDF delivery via WhatsApp
+- `firecrawl-search` — web scraping
+- `ui-ux-pro-max` — UI/UX design
+- `code-reviewer`, `tdd-guide`, `tech-stack-evaluator`
+- `last30days`, `screenshot`, `prd`, `gsd`
+
+---
+
+## Step 3b — Restore workspace files
 
 ```bash
 cp /home/r2d2/brain/workspace/MEMORY.md   /home/r2d2/.openclaw/workspace/
