@@ -4,6 +4,20 @@
 
 ---
 
+## Overview
+
+| Project | Version | Branch | Live | GitHub | CHANGELOG |
+|---------|---------|--------|------|--------|-----------|
+| prompt-studio | 1.2.0 | development | [🌐](https://lab.suhailtaj.cloud/prompt-studio) | [repo](https://github.com/suhailtajshaik/prompt-studio) | [log](https://github.com/suhailtajshaik/prompt-studio/blob/development/CHANGELOG.md) |
+| portfolio | 1.0.0 | development | [🌐](https://suhailtaj.cloud) | [repo](https://github.com/suhailtajshaik/suhailtajshaik) | [log](https://github.com/suhailtajshaik/suhailtajshaik/blob/development/CHANGELOG.md) |
+| Sellbridge | 0.2.0 | development | — | [repo](https://github.com/suhailtajshaik/Sellbridge) | [log](https://github.com/suhailtajshaik/Sellbridge/blob/development/CHANGELOG.md) |
+| gst-ledger-book | 0.1.0 | development | — | [repo](https://github.com/suhailtajshaik/gst-ledger-book) | [log](https://github.com/suhailtajshaik/gst-ledger-book/blob/development/CHANGELOG.md) |
+| missioncrew | 1.0.1 | development | — | [repo](https://github.com/suhailtajshaik/Missioncrew) | [log](https://github.com/suhailtajshaik/Missioncrew/blob/development/CHANGELOG.md) |
+| lab-site | 1.0.0 | development | [🌐](https://lab.suhailtaj.cloud) | *(no remote)* | — |
+| rag-app | 0.1.1 | development | — | *(no remote)* | — |
+
+---
+
 ## prompt-studio
 - **HTTPS:** https://github.com/suhailtajshaik/prompt-studio
 - **CHANGELOG:** https://github.com/suhailtajshaik/prompt-studio/blob/development/CHANGELOG.md
