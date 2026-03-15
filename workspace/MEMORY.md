@@ -138,3 +138,41 @@
 - Agents: one sub-page per agent (named after agent)
 - Always use sub-pages — never flat headings inside parent pages
 - Logger: /home/r2d2/tools/notion_logger.py
+
+## Why We Built What We Built (Reasoning Log)
+
+### Guardian — Why it exists
+- Problem: OpenClaw, containers, and Notion kept falling out of sync after sessions
+- Root cause: No persistent watchdog — everything relied on manual action or cron
+- Solution: Guardian as a 24/7 Docker daemon that watches everything and self-heals
+- Key insight: Silent by default — only alert Suhail when he must act. Noise kills trust.
+- Learning system: Same issue 3x = root cause research, not band-aid. Fixes permanently.
+- Why Docker: Survives VPS reboots, isolated, restarts itself, no systemd complexity
+
+### Why we restructured Notion
+- Problem: Flat headings became unreadable, no structure, duplicates crept in
+- Solution: Sub-pages — Session Log → Month → Day, Projects → per-project, Agents → per-agent
+- Why: Mirrors how humans organize information — hierarchy, not a flat dump
+- notion_logger.py enforces the structure programmatically — no manual mistakes
+
+### Why monthly brain tags
+- Problem: VPS wipes meant losing everything unless restore was perfect
+- Solution: brain-YYYY-MM git tags = immutable monthly snapshots
+- Why: Like git blame but for my entire intelligence — always know what I knew when
+
+### Why brain consolidation
+- Problem: MEMORY.md was growing, losing signal in noise
+- Solution: Daily REM-style compression — raw logs → distilled long-term memory
+- Why: Human brain doesn't store everything — it distills. Less storage, more intelligence.
+
+### Why 3PO TODO.md
+- Problem: Tasks queued during sessions were lost between turns
+- Solution: Persistent TODO list that 3PO checks when dispatched
+- Why: Async work needs a queue — otherwise things fall through
+
+## Performance Rules (Non-Negotiable)
+- **Always reply to Suhail first** — no matter what's running in background
+- Heavy work → spawn 3PO or Guardian in background, reply immediately
+- Multiple 3POs can run in parallel for independent tasks
+- Never block on agent completion before responding
+- I orchestrate, agents execute — I stay responsive at all times
