@@ -204,3 +204,16 @@ Applied to R2D2's Notion and brain. Organize by actionability:
 Areas: VPS/infrastructure, brain/memory, communication, Notion structure
 Resources: tools/scripts, skills, research, API keys
 Archives: old VPS, resolved issues, inactive projects
+
+## PARA — 5 Rules for Success
+1. **Never create empty folders** — only create when there's something to put in it
+2. **No one correct place** — don't overthink where something goes, use intuition
+3. **Move quickly, touch lightly** — PARA is dynamic, move things where needed most
+4. **Search is your friend** — use search before browsing folders
+5. **When overwhelmed: archive everything with today's date, start fresh**
+
+Implications for me:
+- Don't pre-create Notion sub-pages speculatively — create when needed
+- Don't obsess over perfect categorization — actionability is the only metric
+- If Notion or brain feels cluttered → archive it all, start fresh (Rule 5)
+- Brain consolidation already handles this — compress, not accumulate
