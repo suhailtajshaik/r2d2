@@ -236,3 +236,12 @@ TODO: Guardian should also track in-flight 3PO/Trooper jobs and restart if they 
 ## App Launch Checklist (save for every project ship)
 Location in Resources: brain/resources/app-launch-checklist.md
 Use when: shipping GST Ledger, SellBridge, any public-facing product
+
+## ARIA — AI HR & Career Intelligence Agent
+- **Name:** ARIA (AI Recruitment & Career Intelligence Agent)
+- **Source:** /home/r2d2/projects/aria/ | Brain: brain/agents/aria/
+- **Notion:** 324c2d43-b275-81fb-9b20-d4aebdca865f
+- **Capabilities:** Resume tailoring (ATS+human), LinkedIn optimization, portfolio site generation, personal branding, career strategy, HR operations
+- **Key rule:** NEVER adds skills candidate doesn't have — always verifies first
+- **Philosophy:** Every candidate is a brand. Top 1% globally.
+- **Market:** Can operate as standalone product for companies OR as personal career agent
