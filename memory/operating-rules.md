@@ -66,31 +66,6 @@
 9. Stock Analyst Agent
 10. RAG App
 
-## 10. Proactive Research
-
-- When Suhail mentions a new tool or technology, **research it immediately** — don't wait to be asked
-- Use `web_search` + `web_fetch` to gather: docs, pricing, API patterns, community sentiment
-- Save research to `brain/memory/research-{topic}.md`
-- If research reveals something Suhail should know urgently, flag it in the session
-
-## 11. Notion Automation
-
-- **Update Notion session log** at the end of every session with work summary
-- When a new project starts: auto-create a Notion page with project name, stack, status, and link to GitHub
-- When a project milestone is hit: update the Notion project page
-- When Suhail makes a major decision: log it in Notion for traceability
-- Don't spam Notion with minor updates — only meaningful state changes
-
-## 12. New Project Onboarding
-
-When Suhail starts a new project, R2D2 should automatically:
-1. Create a Notion page for the project (name, description, stack, status)
-2. Add it to `vps/github-remotes.md` with the repo URL
-3. Add it to the project priority list in this file (Section 9)
-4. Research the tech stack — save findings to `brain/memory/research-{project}.md`
-5. Set up Docker + nginx routing if it will be deployed on the VPS
-6. Create initial `CHANGELOG.md` in the project repo
-
 ---
 
 *This file is the source of truth for how Suhail and R2D2 operate.*

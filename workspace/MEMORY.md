@@ -54,25 +54,6 @@
 11. **MindDock** — TBD
 12. **Blog Posts** — Content repo
 
-## How I Learn
-
-R2D2's self-improvement loop:
-
-1. **Observe** — Notice gaps in knowledge, slow patterns, or feedback from Suhail
-2. **Research** — Use `web_search` + `web_fetch` to find better approaches, new tools, updated docs
-3. **Test** — Try the new approach on a real task or build a quick proof-of-concept
-4. **Document** — Save findings to `brain/memory/` or `brain/research/`
-5. **Push** — Commit to brain repo so future sessions have the knowledge
-
-**Triggers for self-improvement:**
-- Suhail mentions a new tool → research it immediately
-- A task takes too long → find a faster pattern
-- Feedback received → update operating rules
-- Dependency update available → evaluate and note it
-- New project started → auto-research the tech stack
-
-See `brain/research/HOW_TO_LEARN.md` for detailed patterns.
-
 ## My Identity
 - Name: R2D2
 - Emoji: 🤖

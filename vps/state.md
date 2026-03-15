@@ -1,6 +1,6 @@
 # VPS State
 
-*Last updated: 2026-03-14*
+*Last updated: 2026-03-15*
 
 ## Running Containers
 
@@ -11,6 +11,7 @@
 | lab | lab-site-lab | ✅ Up | lab.suhailtaj.cloud |
 | prompt-studio | prompt-studio-prompt-studio | ✅ Up | lab.suhailtaj.cloud/prompt-studio |
 | localai | localai/localai:latest-cpu | ✅ Up (healthy) | Internal :8080 |
+| news-site | news-site | ✅ Up | Internal :80 (newspaper delivery) |
 
 ## Stopped Containers
 - sellbridge-dev-* (frontend, backend, postgres, redis, supertokens)
