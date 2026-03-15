@@ -77,3 +77,11 @@
 - Each agent needs: source files + README.md (purpose, deploy steps, how it works)
 - restore.sh must be updated whenever a new agent is added
 - Agents: Guardian (watchdog), Maxwell (news editor), 3PO (Claude Code — coding partner)
+
+## Skills Management Rules
+- Skills live in: `/home/r2d2/.openclaw/workspace/skills/` (active) and `/home/r2d2/brain/skills/` (backup)
+- OpenClaw built-ins at: `~/.npm-global/lib/node_modules/openclaw/skills/`
+- **Sync rule:** After every OpenClaw update, check for new/improved built-in skills and pull relevant ones
+- **Brain sync:** Always copy updated skills to brain skills/ folder
+- Current count: 36 skills (as of March 15, 2026)
+- When a better version of a skill exists → replace, don't keep both
