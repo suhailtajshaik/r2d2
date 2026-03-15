@@ -4,106 +4,81 @@ If you're reading this, OpenClaw was reinstalled fresh. This is how to get back 
 
 ---
 
-## Step 1 — Tell R2D2 to restore
+## Quick Restore (One Command)
 
-Say: **"Restore yourself from git: git@github.com:suhailtajshaik/r2d2.git"**
+After cloning the brain repo, run the automated restore script:
 
-R2D2 will clone this repo and follow the steps below automatically.
+```bash
+cd /home/r2d2
+git clone git@github.com:suhailtajshaik/r2d2.git brain
+bash /home/r2d2/brain/restore.sh
+```
+
+That's it. The script handles steps 2-7 below automatically. Read on only if you need to do it manually or debug issues.
 
 ---
 
-## Step 2 — Clone the brain repo
+## Manual Steps (if restore.sh fails)
+
+### Step 1 — Clone the brain repo
 
 ```bash
 cd /home/r2d2
 git clone git@github.com:suhailtajshaik/r2d2.git brain
 ```
 
----
-
-## Step 3 — Restore custom skills
+### Step 2 — Restore custom skills
 
 ```bash
-cp -r /home/r2d2/brain/skills /home/r2d2/.openclaw/workspace/skills
+cp -r /home/r2d2/brain/skills/* /home/r2d2/.openclaw/workspace/skills/
 ```
 
-Custom skills backed up (26 total):
-- `senior-*` — backend, frontend, fullstack, devops, security, secops, ML, data, QA, architect, prompt engineer, computer vision, data scientist
-- `ceo-advisor`, `cto-advisor` — executive advisory
-- `server-health` — VPS health monitoring
-- `send-document` — PDF delivery via WhatsApp
-- `firecrawl-search` — web scraping
-- `ui-ux-pro-max` — UI/UX design
-- `code-reviewer`, `tdd-guide`, `tech-stack-evaluator`
-- `last30days`, `screenshot`, `prd`, `gsd`
+26 custom skills: `senior-*` (13 roles), `ceo-advisor`, `cto-advisor`, `server-health`, `send-document`, `firecrawl-search`, `ui-ux-pro-max`, `code-reviewer`, `tdd-guide`, `tech-stack-evaluator`, `last30days`, `screenshot`, `prd`, `gsd`
 
----
-
-## Step 3b — Restore workspace files
+### Step 3 — Restore workspace files
 
 ```bash
-cp /home/r2d2/brain/workspace/MEMORY.md   /home/r2d2/.openclaw/workspace/
-cp /home/r2d2/brain/workspace/SOUL.md     /home/r2d2/.openclaw/workspace/
-cp /home/r2d2/brain/workspace/USER.md     /home/r2d2/.openclaw/workspace/
-cp /home/r2d2/brain/workspace/AGENTS.md   /home/r2d2/.openclaw/workspace/
-cp /home/r2d2/brain/workspace/TOOLS.md    /home/r2d2/.openclaw/workspace/
-cp /home/r2d2/brain/workspace/IDENTITY.md /home/r2d2/.openclaw/workspace/
-cp /home/r2d2/brain/workspace/HEARTBEAT.md /home/r2d2/.openclaw/workspace/
-
-# Restore daily memory logs
+cp /home/r2d2/brain/workspace/*.md /home/r2d2/.openclaw/workspace/
 mkdir -p /home/r2d2/.openclaw/workspace/memory
 cp /home/r2d2/brain/memory/*.md /home/r2d2/.openclaw/workspace/memory/ 2>/dev/null
 cp /home/r2d2/brain/memory/*.json /home/r2d2/.openclaw/workspace/memory/ 2>/dev/null
 ```
 
----
-
-## Step 4 — Restore global git config
+### Step 4 — Restore git config
 
 ```bash
 cp /home/r2d2/brain/vps/gitconfig-r2d2 ~/.gitconfig
 ```
 
-Or set manually:
-```bash
-git config --global user.email "suhailtajshaik@gmail.com"
-git config --global user.name "R2D2"
-git config --global init.defaultBranch master
-```
-
----
-
-## Step 5 — Restore Notion API key config
+### Step 5 — Restore Notion API key
 
 ```bash
+# Set NOTION_API_KEY in your environment or:
 mkdir -p ~/.config/notion
-# Set NOTION_API_KEY env var or:
 echo "$NOTION_API_KEY" > ~/.config/notion/api_key
 ```
 
----
-
-## Step 6 — Verify SSH key for GitHub
+### Step 6 — Verify SSH key for GitHub
 
 ```bash
 ssh -T git@github.com
 # Should say: Hi suhailtajshaik!
 ```
 
-If not: generate new key, add to GitHub settings.
+If not:
 ```bash
 ssh-keygen -t ed25519 -C "suhailtajshaik@gmail.com" -f ~/.ssh/github_r2d2 -N ""
 cat ~/.ssh/github_r2d2.pub
 # Add to: github.com/settings/keys
 ```
 
----
-
-## Step 7 — Check VPS containers
+### Step 7 — Restore Nginx + Start containers
 
 ```bash
-docker ps -a
-# Restart what's needed:
+# Nginx configs are restored by restore.sh, but manually:
+cp -r /home/r2d2/brain/vps/nginx-conf/* /home/r2d2/nginx/
+
+# Start containers:
 cd /home/r2d2/nginx && docker compose up -d
 cd /home/r2d2/projects/portfolio && docker compose up -d
 cd /home/r2d2/projects/lab-site && docker compose up -d
@@ -112,15 +87,31 @@ cd /home/r2d2/projects/prompt-studio && docker compose up -d
 
 ---
 
+## Post-Restore Verification Checklist
+
+```bash
+# All of these should pass:
+docker ps                                    # nginx, portfolio, lab, prompt-studio running
+curl -s https://suhailtaj.cloud | head -5    # portfolio loads
+curl -s https://lab.suhailtaj.cloud | head -5 # lab loads
+ssh -T git@github.com                        # SSH works
+git -C /home/r2d2/brain log --oneline -3     # brain repo has history
+```
+
+---
+
 ## What R2D2 Knows After Restore
 
-- **Who Suhail is** — USER.md
-- **Who R2D2 is** — SOUL.md + IDENTITY.md
-- **All operating rules** — MEMORY.md + memory/operating-rules.md
-- **All project statuses** — vps/github-remotes.md
-- **VPS architecture** — vps/state.md
-- **Session history** — memory/YYYY-MM-DD.md files
-- **Notion space** — notion.so/suhailtaj/R2D2...
+| File | Contains |
+|------|----------|
+| `workspace/USER.md` | Who Suhail is |
+| `workspace/SOUL.md` + `IDENTITY.md` | Who R2D2 is |
+| `workspace/MEMORY.md` | Long-term memory + operating context |
+| `memory/operating-rules.md` | How we work together |
+| `vps/github-remotes.md` | All projects + GitHub URLs + versions |
+| `vps/state.md` | VPS architecture + running containers |
+| `memory/YYYY-MM-DD.md` | Session history |
+| `research/HOW_TO_LEARN.md` | Self-improvement patterns |
 
 ---
 
@@ -128,10 +119,22 @@ cd /home/r2d2/projects/prompt-studio && docker compose up -d
 
 | Thing | Value |
 |-------|-------|
-| Brain repo | git@github.com:suhailtajshaik/r2d2.git |
+| Brain repo | `git@github.com:suhailtajshaik/r2d2.git` |
 | Notion | https://www.notion.so/suhailtaj/R2D2-323c2d43b27580438ab2df3def34f932 |
 | Portfolio | https://suhailtaj.cloud |
 | Lab | https://lab.suhailtaj.cloud |
 | Prompt Studio | https://lab.suhailtaj.cloud/prompt-studio |
 | Suhail's email | suhailtajshaik@gmail.com |
 | GitHub | suhailtajshaik |
+
+---
+
+## Ongoing Sync
+
+After restore, use `sync.sh` to keep the brain repo up to date:
+
+```bash
+bash /home/r2d2/brain/sync.sh
+# or with a custom commit message:
+bash /home/r2d2/brain/sync.sh "sync: post-session update"
+```
