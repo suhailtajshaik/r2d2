@@ -1,0 +1,25 @@
+services:
+  guardian:
+    build: .
+    container_name: r2d2-guardian
+    restart: unless-stopped
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - /home/r2d2/.openclaw:/root/.openclaw
+      - /home/r2d2/nginx:/home/r2d2/nginx
+      - /home/r2d2/guardian:/home/r2d2/guardian
+      - /home/r2d2/brain:/home/r2d2/brain
+      - /home/r2d2/.config:/root/.config
+      - /home/r2d2/newspapers:/home/r2d2/newspapers
+      - /home/r2d2/tools:/home/r2d2/tools
+      - /home/r2d2/.claude:/root/.claude:ro
+      - /home/r2d2/.claude:/home/r2d2/.claude
+      - /home/r2d2/.openclaw:/home/r2d2/.openclaw
+      - /home/r2d2/projects:/home/r2d2/projects
+      - /home/r2d2/.ssh:/root/.ssh:ro
+    environment:
+      - GUARDIAN_PHONE=+14699941765
+      - GUARDIAN_CHANNEL=whatsapp
+      - NOTION_API_KEY=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
+      - TZ=America/New_York
+    network_mode: host

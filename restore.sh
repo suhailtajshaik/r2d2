@@ -108,3 +108,18 @@ echo "  - Set NOTION_API_KEY if not already in environment"
 echo "  - Verify: docker ps -a"
 echo "  - Verify: curl -s https://suhailtaj.cloud | head -5"
 echo ""
+
+# ── Restore Agents ────────────────────────────────────────────────────────────
+echo ""
+echo "=== Step: Restore Agents ==="
+
+# Guardian
+mkdir -p /home/r2d2/guardian/logs
+cp -r ~/brain/agents/guardian/* /home/r2d2/guardian/
+cd /home/r2d2/guardian && docker compose up -d --build
+echo "✓ Guardian deployed"
+
+# Maxwell (editor agent)
+mkdir -p /home/r2d2/tools/editor-agent
+cp -r ~/brain/agents/maxwell/* /home/r2d2/tools/editor-agent/
+echo "✓ Maxwell restored"
