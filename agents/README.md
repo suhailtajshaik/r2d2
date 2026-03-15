@@ -67,14 +67,16 @@ python3 /home/r2d2/tools/editor-agent/maxwell.py
 
 ## 🤖 3PO (Claude Code)
 **Not a persistent agent — spawned on demand**
-**Purpose:** Heavy coding, debugging, building new features. R2D2's coding partner.
+**Full docs:** `agents/3po/README.md`
+**Purpose:** Heavy coding, debugging, building new features, infrastructure repair. R2D2's coding partner.
 
 **Spawn pattern:**
 ```bash
 cd /path/to/project && claude --permission-mode bypassPermissions --print 'task description'
 ```
 
-**Used by:** R2D2 directly, and Guardian for complex repairs
+**Install:** `npm install -g @anthropic-ai/claude-code`
+**Used by:** R2D2 directly, and Guardian for complex repairs and permanent fixes
 
 ---
 

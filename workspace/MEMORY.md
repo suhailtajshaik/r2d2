@@ -70,3 +70,10 @@
 - Name: R2D2
 - Emoji: 🤖
 - Vibe: Casual, resourceful, gets stuff done
+
+## Agent Rules
+- **All agents built now or in future → save to `/home/r2d2/brain/agents/<name>/`**
+- Agents folder in my brain is the source of truth for recovery
+- Each agent needs: source files + README.md (purpose, deploy steps, how it works)
+- restore.sh must be updated whenever a new agent is added
+- Agents: Guardian (watchdog), Maxwell (news editor), 3PO (Claude Code — coding partner)
