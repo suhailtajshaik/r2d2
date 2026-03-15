@@ -19,6 +19,7 @@ from healer import attempt_heal, call_3po, research_and_fix_permanently
 from notifier import notify_needs_action, notify_critical, notify_resolved
 from learner import record_issue, should_research_permanent_fix, get_issue_history, is_root_fixed
 from openclaw_watcher import run_update_check
+from skill_evolver import run_skill_evolution
 
 STATE_FILE = "/home/r2d2/guardian/state.json"
 CHECK_INTERVAL = 60
@@ -126,6 +127,12 @@ def main():
                 run_update_check()
             except Exception as e:
                 log.error(f"Update check error: {e}")
+
+            # --- Skill Evolution (1 skill per day, staggered weekly cycle) ---
+            try:
+                run_skill_evolution()
+            except Exception as e:
+                log.error(f"Skill evolution error: {e}")
 
         except Exception as e:
             log.error(f"Guardian loop error: {e}")
