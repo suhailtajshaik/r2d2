@@ -124,3 +124,17 @@
 - Stock Analyst Agent: 324c2d43-b275-81b5-9482-e92d5fe2e5c0
 - The Headlines Today: 324c2d43-b275-81e0-aad6-c5e7128b8492
 - news-site: 324c2d43-b275-812b-884b-c730724cb4ac
+
+## Notion Agent Page IDs
+- Agents (parent): 324c2d43-b275-8179-aeb3-c22edc04ee68
+- Guardian: 324c2d43-b275-81b4-bfc7-fb7219981909
+- Maxwell: 324c2d43-b275-81bd-8845-d22737d4bda4
+- 3PO: 324c2d43-b275-812b-80b6-e12fa4f22f0a
+
+## Notion Naming Conventions (Operating Rule)
+- Session Log month pages: "March 2026" (month name + year)
+- Session Log day pages: "15 March 2026" (day number + month name + year)
+- Projects: one sub-page per project (named after project)
+- Agents: one sub-page per agent (named after agent)
+- Always use sub-pages — never flat headings inside parent pages
+- Logger: /home/r2d2/tools/notion_logger.py

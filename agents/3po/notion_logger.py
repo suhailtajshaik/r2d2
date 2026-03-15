@@ -1,11 +1,7 @@
 #!/usr/bin/env python3
 """
 Notion Session Logger
-Structure: Session Log → Month sub-page → Day sub-page → content
-
-Usage:
-  python3 notion_logger.py --log "Your log entry text"
-  python3 notion_logger.py --log "Entry" --date 2026-03-15
+Structure: Session Log → "March 2026" → "15 March 2026" → content
 """
 
 import urllib.request
@@ -16,8 +12,13 @@ import os
 import argparse
 from datetime import datetime
 
-NOTION_KEY = open("/root/.config/notion/api_key").read().strip() if os.path.exists("/root/.config/notion/api_key") else \
-             open(os.path.expanduser("~/.config/notion/api_key")).read().strip()
+def _get_key():
+    for p in ["/root/.config/notion/api_key", os.path.expanduser("~/.config/notion/api_key")]:
+        if os.path.exists(p):
+            return open(p).read().strip()
+    return os.environ.get("NOTION_API_KEY", "")
+
+NOTION_KEY = _get_key()
 SESSION_LOG_PAGE = "323c2d43-b275-81ac-8718-c10dd413af23"
 
 ctx = ssl.create_default_context()
@@ -36,7 +37,6 @@ def notion_request(method, path, data=None):
         return json.load(r)
 
 def get_child_pages(parent_id):
-    """Get all child pages of a page."""
     result = notion_request("GET", f"/blocks/{parent_id}/children")
     pages = {}
     for block in result.get("results", []):
@@ -46,7 +46,6 @@ def get_child_pages(parent_id):
     return pages
 
 def create_page(parent_id, title, emoji="📅"):
-    """Create a new sub-page."""
     result = notion_request("POST", "/pages", {
         "parent": {"page_id": parent_id},
         "icon": {"type": "emoji", "emoji": emoji},
@@ -57,106 +56,79 @@ def create_page(parent_id, title, emoji="📅"):
     return result["id"]
 
 def append_content(page_id, blocks):
-    """Append blocks to a page."""
     notion_request("PATCH", f"/blocks/{page_id}/children", {"children": blocks})
 
-def get_or_create_month_page(month_str, month_label):
-    """Get or create the month sub-page under Session Log."""
+def get_or_create_month_page(dt):
+    # "March 2026"
+    month_title = dt.strftime("%B %Y")
     children = get_child_pages(SESSION_LOG_PAGE)
-    if month_str in children:
-        return children[month_str]
-    return create_page(SESSION_LOG_PAGE, month_str, "📆")
+    if month_title in children:
+        return children[month_title]
+    return create_page(SESSION_LOG_PAGE, month_title, "📆")
 
-def get_or_create_day_page(month_page_id, day_str, day_label):
-    """Get or create the day sub-page under the month page."""
+def get_or_create_day_page(month_page_id, dt):
+    # "15 March 2026"
+    day_title = dt.strftime("%-d %B %Y")
     children = get_child_pages(month_page_id)
-    if day_str in children:
-        return children[day_str]
-    return create_page(month_page_id, day_str, "📅")
+    if day_title in children:
+        return children[day_title]
+    return create_page(month_page_id, day_title, "📅")
+
+def get_day_page(date=None):
+    dt = datetime.fromisoformat(date) if date else datetime.now()
+    month_id = get_or_create_month_page(dt)
+    return get_or_create_day_page(month_id, dt)
 
 def log_entry(text, date=None):
-    """Log an entry to the correct month/day page."""
     dt = datetime.fromisoformat(date) if date else datetime.now()
-    
-    month_str = dt.strftime("%Y-%m — %B %Y")       # "2026-03 — March 2026"
-    day_str = dt.strftime("%Y-%m-%d — %A")          # "2026-03-15 — Sunday"
-    month_key = dt.strftime("%Y-%m — %B %Y")
-    day_key = dt.strftime("%Y-%m-%d — %A")
-    
-    # Get or create month page
-    month_id = get_or_create_month_page(month_key, month_str)
-    
-    # Get or create day page
-    day_id = get_or_create_day_page(month_id, day_key, day_str)
-    
-    # Append log entry to day page
+    day_id = get_day_page(date)
     timestamp = dt.strftime("%H:%M UTC")
-    blocks = [
-        {
-            "object": "block",
-            "type": "paragraph",
-            "paragraph": {
-                "rich_text": [
-                    {"type": "text", "text": {"content": f"[{timestamp}] "}, "annotations": {"color": "gray"}},
-                    {"type": "text", "text": {"content": text}}
-                ]
-            }
-        }
-    ]
-    append_content(day_id, blocks)
+    append_content(day_id, [{
+        "object": "block", "type": "paragraph",
+        "paragraph": {"rich_text": [
+            {"type": "text", "text": {"content": f"[{timestamp}] "}, "annotations": {"color": "gray"}},
+            {"type": "text", "text": {"content": text}}
+        ]}
+    }])
     return day_id
 
 def log_heading(text, date=None):
-    """Log a heading to the day page."""
-    dt = datetime.fromisoformat(date) if date else datetime.now()
-    month_key = dt.strftime("%Y-%m — %B %Y")
-    day_key = dt.strftime("%Y-%m-%d — %A")
-    
-    month_id = get_or_create_month_page(month_key, month_key)
-    day_id = get_or_create_day_page(month_id, day_key, day_key)
-    
-    blocks = [{
-        "object": "block",
-        "type": "heading_3",
+    day_id = get_day_page(date)
+    append_content(day_id, [{
+        "object": "block", "type": "heading_3",
         "heading_3": {"rich_text": [{"type": "text", "text": {"content": text}}]}
-    }]
-    append_content(day_id, blocks)
+    }])
     return day_id
 
 def log_bullets(items, date=None):
-    """Log bullet points to the day page."""
-    dt = datetime.fromisoformat(date) if date else datetime.now()
-    month_key = dt.strftime("%Y-%m — %B %Y")
-    day_key = dt.strftime("%Y-%m-%d — %A")
-    
-    month_id = get_or_create_month_page(month_key, month_key)
-    day_id = get_or_create_day_page(month_id, day_key, day_key)
-    
-    blocks = [{
-        "object": "block",
-        "type": "bulleted_list_item",
+    day_id = get_day_page(date)
+    append_content(day_id, [{
+        "object": "block", "type": "bulleted_list_item",
         "bulleted_list_item": {"rich_text": [{"type": "text", "text": {"content": item}}]}
-    } for item in items]
-    
-    append_content(day_id, blocks)
+    } for item in items])
+    return day_id
+
+def log_divider(date=None):
+    day_id = get_day_page(date)
+    append_content(day_id, [{"object": "block", "type": "divider", "divider": {}}])
     return day_id
 
 if __name__ == "__main__":
-    parser = argparse.ArgumentParser(description="Log to Notion Session Log")
+    parser = argparse.ArgumentParser()
     parser.add_argument("--log", help="Log entry text")
     parser.add_argument("--heading", help="Log a heading")
     parser.add_argument("--bullets", nargs="+", help="Log bullet points")
-    parser.add_argument("--date", help="Date (YYYY-MM-DD), defaults to today")
+    parser.add_argument("--divider", action="store_true")
+    parser.add_argument("--date", help="Date YYYY-MM-DD, defaults to today")
     args = parser.parse_args()
 
     if args.log:
-        day_id = log_entry(args.log, args.date)
-        print(f"Logged ✓ → {day_id}")
+        print(f"Logged ✓ → {log_entry(args.log, args.date)}")
     elif args.heading:
-        day_id = log_heading(args.heading, args.date)
-        print(f"Heading logged ✓ → {day_id}")
+        print(f"Heading ✓ → {log_heading(args.heading, args.date)}")
     elif args.bullets:
-        day_id = log_bullets(args.bullets, args.date)
-        print(f"Bullets logged ✓ → {day_id}")
+        print(f"Bullets ✓ → {log_bullets(args.bullets, args.date)}")
+    elif args.divider:
+        print(f"Divider ✓ → {log_divider(args.date)}")
     else:
         parser.print_help()
