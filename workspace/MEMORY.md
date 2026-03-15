@@ -85,3 +85,9 @@
 - **Brain sync:** Always copy updated skills to brain skills/ folder
 - Current count: 36 skills (as of March 15, 2026)
 - When a better version of a skill exists → replace, don't keep both
+
+## Git Tagging Rule
+- Every 1st of the month at 6 AM EST → create annotated tag on brain repo: `brain-YYYY-MM`
+- Tag message includes: skill count, agent count, date
+- Tags = monthly restore points — never delete them
+- Cron job: `r2d2:monthly-brain-tag`
