@@ -194,3 +194,13 @@
 - Always-running: r2d2-nginx, r2d2-guardian, portfolio, lab, prompt-studio, news-site, localai
 - Guardian auto-prunes: reclaimable > 5GB → docker system prune
 - Swarm Troopers are ephemeral — not in catalog
+
+## PARA Method (Tiago Forte) — Notion Organization
+Applied to R2D2's Notion and brain. Organize by actionability:
+- **Projects** (active, goal+deadline): 323c2d43-b275-81fb-9590-f7abe89a6763
+- **Areas** (ongoing responsibilities, no deadline): 324c2d43-b275-8149-9da7-f88da9a0dd10
+- **Resources** (reference, tools, research): 324c2d43-b275-8168-bf0b-dc5ac801acda
+- **Archives** (completed/inactive): 324c2d43-b275-8172-af8e-ecbd60b2ac8f
+Areas: VPS/infrastructure, brain/memory, communication, Notion structure
+Resources: tools/scripts, skills, research, API keys
+Archives: old VPS, resolved issues, inactive projects
