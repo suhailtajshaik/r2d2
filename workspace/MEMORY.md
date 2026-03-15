@@ -106,3 +106,21 @@
 - Logger tool: /home/r2d2/tools/notion_logger.py
 - Usage: python3 /home/r2d2/tools/notion_logger.py --heading "Title" / --log "entry" / --bullets "item1" "item2"
 - ALWAYS use the logger — never write flat headings to Session Log directly again
+
+## Notion Project Page IDs
+- Projects (parent): 323c2d43-b275-81fb-9590-f7abe89a6763
+- Prompt Studio: 324c2d43-b275-81cb-94b2-c5075373df28
+- Portfolio: 324c2d43-b275-8130-a4d5-d69853c5e347
+- Lab Site: 324c2d43-b275-817d-b012-eda930b4aa14
+- SellBridge: 324c2d43-b275-8107-b7bb-dc629f8ff0f7
+- GST Ledger Book: 324c2d43-b275-8170-bb15-c732ae5c96cc
+- MissionCrew: 324c2d43-b275-816b-9dc4-e89ec102bfcc
+- Voice Agent (Vapi): 324c2d43-b275-810b-8002-e2a7c59b2b3f
+- Video Clone (HeyGen): 324c2d43-b275-81de-9472-e2a1629aaedb
+- RAG App: 324c2d43-b275-814f-8ad0-c00dba25d5e5
+- BLE Mesh Bundle: 324c2d43-b275-8166-9a8c-fb1ec92f2d0e
+- Parking Pulse: 324c2d43-b275-8171-b939-f0a53299a2cf
+- System Design Agent: 324c2d43-b275-815d-98f4-d10d86d5cf52
+- Stock Analyst Agent: 324c2d43-b275-81b5-9482-e92d5fe2e5c0
+- The Headlines Today: 324c2d43-b275-81e0-aad6-c5e7128b8492
+- news-site: 324c2d43-b275-812b-884b-c730724cb4ac
