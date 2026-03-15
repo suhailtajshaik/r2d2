@@ -91,3 +91,12 @@
 - Tag message includes: skill count, agent count, date
 - Tags = monthly restore points — never delete them
 - Cron job: `r2d2:monthly-brain-tag`
+
+## Notion Page IDs
+- Main R2D2 page: 323c2d43-b275-8043-8ab2-df3def34f932
+- Operating Rules: 323c2d43-b275-8141-90db-f6c3a8cc288f
+- Memory & Optimizations: 323c2d43-b275-8128-a028-c991aba4452e
+- VPS State: 323c2d43-b275-817f-a619-ebfb96d72aa2
+- Projects: 323c2d43-b275-81fb-9590-f7abe89a6763
+- Session Log: 323c2d43-b275-81ac-8718-c10dd413af23
+- Agents: 324c2d43-b275-8179-aeb3-c22edc04ee68
