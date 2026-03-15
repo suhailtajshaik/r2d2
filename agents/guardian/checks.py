@@ -23,6 +23,7 @@ def run_all_checks():
         check_notion_sync,
         check_memory_write,
         check_newspaper_generator,
+        check_docker_disk_usage,
     ]
     results = []
     for check_fn in checks:
@@ -254,3 +255,27 @@ def check_newspaper_generator():
         return ("Newspaper Generator", True, f"Last newspaper {int(age.total_seconds()//3600)}h ago")
     except Exception as e:
         return ("Newspaper Generator", False, str(e))
+
+
+def check_docker_disk_usage():
+    """Check Docker isn't eating too much disk with unused images/containers."""
+    try:
+        result = subprocess.run(
+            ["docker", "system", "df", "--format", "{{.Type}}\t{{.Size}}\t{{.Reclaimable}}"],
+            capture_output=True, text=True, timeout=15
+        )
+        lines = result.stdout.strip().split("\n")
+        reclaimable_gb = 0
+        for line in lines:
+            parts = line.split("\t")
+            if len(parts) >= 3:
+                rec = parts[2].replace("B","").strip()
+                # Parse size — rough estimate
+                if "GB" in rec:
+                    try: reclaimable_gb += float(rec.replace("GB","").split("(")[-1].strip())
+                    except: pass
+        if reclaimable_gb > 5:
+            return ("Docker Disk", False, f"{reclaimable_gb:.1f}GB reclaimable — needs pruning")
+        return ("Docker Disk", True, f"{reclaimable_gb:.1f}GB reclaimable")
+    except Exception as e:
+        return ("Docker Disk", False, str(e))

@@ -176,3 +176,21 @@
 - Multiple 3POs can run in parallel for independent tasks
 - Never block on agent completion before responding
 - I orchestrate, agents execute — I stay responsive at all times
+
+## Agent Naming Convention
+- **R2D2** — orchestrator, always responds first, dispatches agents
+- **Guardian** — 24/7 watchdog Docker container, silent self-healer
+- **Maxwell** — senior news editor, runs daily at 5 AM EST
+- **3PO** — Claude Code CLI, single coding partner, spawned on demand
+- **Swarm Troopers** — multiple parallel Claude Code instances for independent tasks
+  - Spawned when a task can be split into parallel workstreams
+  - Each trooper owns exactly one isolated task
+  - 3PO coordinates troopers, R2D2 orchestrates 3PO
+  - Ephemeral — spawn, execute, terminate
+  - Pattern: `claude --permission-mode bypassPermissions --print 'task' &` (multiple)
+
+## Docker Catalog
+- Location: /home/r2d2/docker-catalog.md
+- Always-running: r2d2-nginx, r2d2-guardian, portfolio, lab, prompt-studio, news-site, localai
+- Guardian auto-prunes: reclaimable > 5GB → docker system prune
+- Swarm Troopers are ephemeral — not in catalog

@@ -137,7 +137,23 @@ def heal_newspaper_generator(message):
 
 
 # Extended heal dispatch
+def heal_docker_disk(message):
+    """Prune unused Docker images, containers, volumes."""
+    import subprocess, logging
+    log = logging.getLogger("guardian")
+    try:
+        subprocess.run(["docker", "image", "prune", "-f"], capture_output=True, timeout=60)
+        subprocess.run(["docker", "container", "prune", "-f"], capture_output=True, timeout=60)
+        subprocess.run(["docker", "volume", "prune", "-f"], capture_output=True, timeout=60)
+        log.info("Docker pruned ✓")
+        return True
+    except Exception as e:
+        log.error(f"Docker prune failed: {e}")
+        return False
+
+
 HEAL_MAP_EXTENDED = {
+    "Docker Disk": heal_docker_disk,
     "Notion Sync": heal_notion_sync,
     "Memory Write": heal_memory_write,
     "Newspaper Generator": heal_newspaper_generator,
@@ -176,3 +192,5 @@ Be thorough. This must not happen again.
     subprocess.Popen([
         "claude", "--permission-mode", "bypassPermissions", "--print", prompt
     ])
+
+
