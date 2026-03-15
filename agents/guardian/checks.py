@@ -24,6 +24,7 @@ def run_all_checks():
         check_memory_write,
         check_newspaper_generator,
         check_docker_disk_usage,
+        check_inflight_agents,
     ]
     results = []
     for check_fn in checks:
@@ -279,3 +280,19 @@ def check_docker_disk_usage():
         return ("Docker Disk", True, f"{reclaimable_gb:.1f}GB reclaimable")
     except Exception as e:
         return ("Docker Disk", False, str(e))
+
+
+def check_inflight_agents():
+    """Check if any 3PO/Trooper processes are running and healthy."""
+    try:
+        result = subprocess.run(
+            ["pgrep", "-f", "claude.*bypassPermissions"],
+            capture_output=True, text=True
+        )
+        pids = [p for p in result.stdout.strip().split("\n") if p]
+        # Just report — Guardian doesn't kill agents, just tracks them
+        if pids:
+            return ("In-Flight Agents", True, f"{len(pids)} agent(s) running: {', '.join(pids[:3])}")
+        return ("In-Flight Agents", True, "No agents running")
+    except Exception as e:
+        return ("In-Flight Agents", True, "Check skipped")  # Non-critical

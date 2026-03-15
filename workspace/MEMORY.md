@@ -217,3 +217,22 @@ Implications for me:
 - Don't obsess over perfect categorization — actionability is the only metric
 - If Notion or brain feels cluttered → archive it all, start fresh (Rule 5)
 - Brain consolidation already handles this — compress, not accumulate
+
+## Three-Layer Memory System (applied to R2D2)
+Framework seen March 15, 2026. Already implemented but now formally named:
+- **Layer 1 — Daily Notes** (hippocampus): memory/YYYY-MM-DD.md — continuous updates throughout day
+- **Layer 2 — Knowledge Base** (cortex): MEMORY.md — rebuilt nightly via brain consolidator at ~midnight
+- **Layer 3 — Heartbeat** (cerebellum): Guardian — monitors every 60s, restarts anything that died
+
+Gap vs framework: their heartbeat runs every 30 min and monitors TASKS (not just infra).
+TODO: Guardian should also track in-flight 3PO/Trooper jobs and restart if they die.
+
+## PARA Decision Flowchart (where to store any info)
+- Does it help move a current project forward? → **Projects**
+- Does it uphold an area of responsibility? → **Areas**
+- Does it support curiosity/interests? → **Resources**
+- None of the above? → Probably not worth keeping. Discard.
+
+## App Launch Checklist (save for every project ship)
+Location in Resources: brain/resources/app-launch-checklist.md
+Use when: shipping GST Ledger, SellBridge, any public-facing product
