@@ -20,6 +20,8 @@ from notifier import notify_needs_action, notify_critical, notify_resolved
 from learner import record_issue, should_research_permanent_fix, get_issue_history, is_root_fixed
 from openclaw_watcher import run_update_check
 from skill_evolver import run_skill_evolution
+from agent_evolver import run_agent_evolution
+from meta_research import run_meta_research
 from brain_consolidator import run_brain_consolidation
 from monthly_tagger import run_monthly_tag
 
@@ -135,6 +137,18 @@ def main():
                 run_skill_evolution()
             except Exception as e:
                 log.error(f"Skill evolution error: {e}")
+
+            # --- Agent Evolution (1 agent per day, weekly cycle per agent) ---
+            try:
+                run_agent_evolution()
+            except Exception as e:
+                log.error(f"Agent evolution error: {e}")
+
+            # --- Meta Research (weekly: discover new techniques + agent ideas) ---
+            try:
+                run_meta_research()
+            except Exception as e:
+                log.error(f"Meta research error: {e}")
 
             # --- Brain Consolidation (daily — compress, distill, strengthen) ---
             try:
