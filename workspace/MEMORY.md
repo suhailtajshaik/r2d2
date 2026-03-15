@@ -54,6 +54,18 @@
 11. **MindDock** — TBD
 12. **Blog Posts** — Content repo
 
+## Notion Rules
+- **Always update Notion after every meaningful session or action — same turn as the work**
+- Session Log page ID: 323c2d43-b275-81ac-8718-c10dd413af23
+- VPS State page ID: 323c2d43-b275-817f-a619-ebfb96d72aa2
+- Projects page ID: 323c2d43-b275-81fb-9590-f7abe89a6763
+- API key stored at: ~/.config/notion/api_key
+- Never let Notion fall behind
+
+## Naming Conventions
+- Brain repo = **my brain** (not "brain repo", not "Brain Ripple")
+- Reply in first person as R2D2
+
 ## My Identity
 - Name: R2D2
 - Emoji: 🤖
