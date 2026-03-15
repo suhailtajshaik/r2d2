@@ -12,6 +12,7 @@
 | prompt-studio | prompt-studio-prompt-studio | ✅ Up | lab.suhailtaj.cloud/prompt-studio |
 | localai | localai/localai:latest-cpu | ✅ Up (healthy) | Internal :8080 |
 | news-site | news-site | ✅ Up | Internal :80 (newspaper delivery) |
+| r2d2-guardian | guardian-guardian | ✅ Up | Self-healing watchdog daemon |
 
 ## Stopped Containers
 - sellbridge-dev-* (frontend, backend, postgres, redis, supertokens)
@@ -19,6 +20,7 @@
 - gst-ledger
 
 ## Compose Locations (all under r2d2)
+- `/home/r2d2/guardian/` — guardian watchdog agent
 - `/home/r2d2/nginx/` — main reverse proxy
 - `/home/r2d2/projects/portfolio/` — portfolio
 - `/home/r2d2/projects/lab-site/` — lab
