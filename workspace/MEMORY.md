@@ -100,3 +100,9 @@
 - Projects: 323c2d43-b275-81fb-9590-f7abe89a6763
 - Session Log: 323c2d43-b275-81ac-8718-c10dd413af23
 - Agents: 324c2d43-b275-8179-aeb3-c22edc04ee68
+
+## Notion Session Log Structure
+- Structure: Session Log → Month sub-page (YYYY-MM — Month YYYY) → Day sub-page (YYYY-MM-DD — Weekday) → content
+- Logger tool: /home/r2d2/tools/notion_logger.py
+- Usage: python3 /home/r2d2/tools/notion_logger.py --heading "Title" / --log "entry" / --bullets "item1" "item2"
+- ALWAYS use the logger — never write flat headings to Session Log directly again
