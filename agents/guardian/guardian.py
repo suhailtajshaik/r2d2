@@ -21,6 +21,7 @@ from learner import record_issue, should_research_permanent_fix, get_issue_histo
 from openclaw_watcher import run_update_check
 from skill_evolver import run_skill_evolution
 from brain_consolidator import run_brain_consolidation
+from monthly_tagger import run_monthly_tag
 
 STATE_FILE = "/home/r2d2/guardian/state.json"
 CHECK_INTERVAL = 60
@@ -140,6 +141,12 @@ def main():
                 run_brain_consolidation()
             except Exception as e:
                 log.error(f"Brain consolidation error: {e}")
+
+            # --- Monthly Brain Tag (1st of month) ---
+            try:
+                run_monthly_tag()
+            except Exception as e:
+                log.error(f"Monthly tag error: {e}")
 
         except Exception as e:
             log.error(f"Guardian loop error: {e}")
