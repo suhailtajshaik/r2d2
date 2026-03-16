@@ -1,0 +1,57 @@
+# {{ name }}
+
+{{ location }} | {{ email }}{% if phone %} | {{ phone }}{% endif %}
+
+{% if linkedin_url %}LinkedIn: {{ linkedin_url }}{% endif %}{% if github_url %} | GitHub: {{ github_url }}{% endif %}{% if portfolio_url %} | Portfolio: {{ portfolio_url }}{% endif %}
+
+---
+
+## Summary
+
+{{ uvp | default(brand_statement, true) | default("Experienced " + current_role + " with " + years_experience|string + "+ years of professional experience.", true) }}
+
+---
+
+## Skills
+
+{{ skills | join(", ") }}
+
+---
+
+## Experience
+
+{% for role in experience | default([]) %}
+### {{ role.title }} — {{ role.company }}
+*{{ role.start_date }} – {{ role.end_date | default("Present") }}* | {{ role.location | default("") }}
+
+{% for bullet in role.bullets | default([]) %}
+- {{ bullet }}
+{% endfor %}
+
+{% endfor %}
+
+---
+
+## Achievements
+
+{% for achievement in achievements | default([]) %}
+- {{ achievement }}
+{% endfor %}
+
+---
+
+## Education
+
+{% for edu in education | default([]) %}
+- {{ edu }}
+{% endfor %}
+
+---
+
+{% if certifications %}
+## Certifications
+
+{% for cert in certifications | default([]) %}
+- {{ cert }}
+{% endfor %}
+{% endif %}

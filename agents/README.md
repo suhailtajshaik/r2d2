@@ -65,6 +65,61 @@ python3 /home/r2d2/tools/editor-agent/maxwell.py
 
 ---
 
+## 💼 ARIA (Multi-Tenant)
+**Location on VPS:** `/home/r2d2/projects/aria/`
+**Source backup:** `~/brain/agents/aria/src/`
+**GitHub:** `suhailtajshaik/aria` (repo pending creation)
+**Purpose:** Multi-tenant AI HR & Career Intelligence Agent — serves multiple companies AND candidates simultaneously with full data isolation.
+
+**Deploy:**
+```bash
+mkdir -p /home/r2d2/projects/aria
+cp -r ~/brain/agents/aria/src/* /home/r2d2/projects/aria/
+cd /home/r2d2/projects/aria
+docker compose up -d --build
+```
+
+**Run (multi-tenant CLI):**
+```bash
+# Candidates
+python3 aria.py --new-candidate --name "John Doe" --email "john@example.com"
+python3 aria.py --client cand_xxx --task intake
+python3 aria.py --client cand_xxx --task resume_analysis
+python3 aria.py --client cand_xxx --task tailor_resume --job "Staff Engineer at Stripe"
+python3 aria.py --client cand_xxx --task linkedin
+python3 aria.py --client cand_xxx --task brand
+python3 aria.py --client cand_xxx --task portfolio
+
+# Companies
+python3 aria.py --new-company --name "Acme Corp" --industry "Tech"
+python3 aria.py --client comp_xxx --task write_jd --role "Senior Engineer"
+python3 aria.py --client comp_xxx --task screen_resumes --job job_xxx
+python3 aria.py --client comp_xxx --task weekly_report
+
+# Admin
+python3 aria.py --list-clients
+python3 aria.py --batch weekly_checkin
+python3 aria.py --batch portfolio_sync
+```
+
+**Identity:**
+- Name: ARIA (AI Recruitment & Career Intelligence Agent)
+- Persona: Senior recruiter with 15 years at top-tier companies, now AI-powered
+- Philosophy: Every candidate is a brand. Every resume is a marketing document.
+- Architecture: Multi-tenant with UUID-based client IDs (cand_xxx / comp_xxx)
+
+**Key features:**
+- Multi-tenant: one instance serves companies + candidates with full data isolation
+- Resume intelligence with ATS optimization
+- LinkedIn profile rewrites (headline, about, experience)
+- Portfolio site generator (single HTML, Tailwind CDN, dark/light toggle, JSON-LD, llms.txt)
+- Personal brand architecture (UVP, positioning, content strategy)
+- Company HR: job description writing, resume screening, weekly reports
+- Batch ops: weekly check-ins for all candidates, portfolio sync
+- ATS keyword analyzer with match scoring
+
+---
+
 ## 🤖 3PO (Claude Code)
 **Not a persistent agent — spawned on demand**
 **Full docs:** `agents/3po/README.md`
@@ -84,4 +139,5 @@ cd /path/to/project && claude --permission-mode bypassPermissions --print 'task 
 1. Restore R2D2: `bash ~/brain/restore.sh`
 2. Deploy Guardian: `cd /home/r2d2/guardian && docker compose up -d --build`
 3. Deploy Maxwell: already at `/home/r2d2/tools/editor-agent/` via restore
-4. Verify: `docker ps | grep guardian`
+4. Deploy ARIA: `cp -r ~/brain/agents/aria/* /home/r2d2/projects/aria/`
+5. Verify: `docker ps | grep guardian`

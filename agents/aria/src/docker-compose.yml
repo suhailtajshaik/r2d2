@@ -1,0 +1,11 @@
+services:
+  aria:
+    build: .
+    container_name: aria
+    volumes:
+      - ./clients:/app/clients
+      - /home/r2d2/brain/agents/aria:/app/agent:ro
+      - /home/r2d2/.claude:/root/.claude:ro
+    environment:
+      - ANTHROPIC_API_KEY=${ANTHROPIC_API_KEY:-}
+    restart: unless-stopped

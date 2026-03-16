@@ -1,0 +1,33 @@
+{{ name }}
+{{ location }}
+{{ email }}{% if phone %} | {{ phone }}{% endif %}
+
+{{ date | default("[Date]") }}
+
+Hiring Manager
+{{ company | default("[Company Name]") }}
+
+---
+
+Dear Hiring Team,
+
+I'm writing to express my strong interest in the **{{ target_role | default("[Target Role]") }}** position at {{ company | default("[Company Name]") }}.
+
+{{ uvp | default("As a " + current_role + " with " + years_experience|string + "+ years of experience, I bring a proven track record of delivering impactful results.") }}
+
+{% if achievements %}
+**Key highlights from my career:**
+
+{% for achievement in achievements[:3] %}
+- {{ achievement }}
+{% endfor %}
+{% endif %}
+
+{% if skills %}
+My technical expertise spans **{{ skills[:5] | join(", ") }}**, and I'm particularly drawn to this role because of {{ company_reason | default("the opportunity to drive meaningful impact at scale") }}.
+{% endif %}
+
+I'd welcome the opportunity to discuss how my background aligns with your team's needs. I'm available for a conversation at your convenience.
+
+Best regards,
+{{ name }}

@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ name }} — Resume</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Georgia', serif; color: #1a1a1a; max-width: 800px; margin: 0 auto; padding: 40px; line-height: 1.6; }
+        h1 { font-size: 28px; font-weight: 700; margin-bottom: 4px; color: #111; }
+        h2 { font-size: 16px; font-weight: 600; text-transform: uppercase; letter-spacing: 1px; color: #2563eb; border-bottom: 2px solid #2563eb; padding-bottom: 4px; margin: 24px 0 12px; }
+        h3 { font-size: 15px; font-weight: 600; margin-bottom: 2px; }
+        .contact { font-size: 13px; color: #555; margin-bottom: 16px; }
+        .contact a { color: #2563eb; text-decoration: none; }
+        .summary { font-size: 14px; color: #333; margin-bottom: 8px; font-style: italic; }
+        .role { margin-bottom: 16px; }
+        .role-header { display: flex; justify-content: space-between; align-items: baseline; }
+        .role-date { font-size: 13px; color: #666; }
+        .role-company { font-size: 14px; color: #444; }
+        ul { padding-left: 20px; margin-top: 6px; }
+        li { font-size: 13px; margin-bottom: 4px; color: #333; }
+        .skills { display: flex; flex-wrap: wrap; gap: 6px; }
+        .skill-tag { background: #eff6ff; color: #2563eb; padding: 3px 10px; border-radius: 4px; font-size: 12px; }
+        .achievement { border-left: 3px solid #2563eb; padding-left: 12px; margin-bottom: 8px; font-size: 13px; }
+        @media print { body { padding: 20px; } }
+    </style>
+</head>
+<body>
+    <h1>{{ name }}</h1>
+    <div class="contact">
+        {{ location }}{% if email %} · <a href="mailto:{{ email }}">{{ email }}</a>{% endif %}{% if phone %} · {{ phone }}{% endif %}
+        {% if linkedin_url %}<br><a href="{{ linkedin_url }}">LinkedIn</a>{% endif %}
+        {% if github_url %} · <a href="{{ github_url }}">GitHub</a>{% endif %}
+        {% if portfolio_url %} · <a href="{{ portfolio_url }}">Portfolio</a>{% endif %}
+    </div>
+
+    {% if uvp or brand_statement %}
+    <p class="summary">{{ uvp | default(brand_statement) }}</p>
+    {% endif %}
+
+    <h2>Skills</h2>
+    <div class="skills">
+        {% for skill in skills %}
+        <span class="skill-tag">{{ skill }}</span>
+        {% endfor %}
+    </div>
+
+    {% if experience %}
+    <h2>Experience</h2>
+    {% for role in experience %}
+    <div class="role">
+        <div class="role-header">
+            <h3>{{ role.title }}</h3>
+            <span class="role-date">{{ role.start_date }} – {{ role.end_date | default("Present") }}</span>
+        </div>
+        <div class="role-company">{{ role.company }}{% if role.location %} · {{ role.location }}{% endif %}</div>
+        {% if role.bullets %}
+        <ul>
+            {% for bullet in role.bullets %}
+            <li>{{ bullet }}</li>
+            {% endfor %}
+        </ul>
+        {% endif %}
+    </div>
+    {% endfor %}
+    {% endif %}
+
+    {% if achievements %}
+    <h2>Key Achievements</h2>
+    {% for achievement in achievements %}
+    <div class="achievement">{{ achievement }}</div>
+    {% endfor %}
+    {% endif %}
+
+    {% if education %}
+    <h2>Education</h2>
+    {% for edu in education %}
+    <p style="font-size: 13px;">{{ edu }}</p>
+    {% endfor %}
+    {% endif %}
+
+    {% if certifications %}
+    <h2>Certifications</h2>
+    {% for cert in certifications %}
+    <p style="font-size: 13px;">{{ cert }}</p>
+    {% endfor %}
+    {% endif %}
+</body>
+</html>

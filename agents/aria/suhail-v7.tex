@@ -1,0 +1,133 @@
+\documentclass[letterpaper]{article}
+\usepackage[top=0.35in, bottom=0.25in, left=0.65in, right=0.65in]{geometry}
+\usepackage{times}
+\usepackage{enumitem}
+\usepackage{graphicx}
+\usepackage[hidelinks]{hyperref}
+\usepackage{tikz}
+\usepackage{titlesec}
+\usepackage{fix-cm}
+
+\pagestyle{empty}
+
+% Base font size 9.5pt with tight leading
+\renewcommand{\normalsize}{\fontsize{9.1}{10.6}\selectfont}
+\normalsize
+
+% Section formatting: ALL CAPS, bold, with hrule
+\titleformat{\section}
+  {\fontsize{11}{13}\bfseries\MakeUppercase}
+  {}{0em}{}[\vspace{-5pt}\hrule height 0.5pt\vspace{1pt}]
+\titlespacing*{\section}{0pt}{4pt}{2pt}
+
+% Tight bullet list settings
+\setlist[itemize]{
+  leftmargin=0.22in,
+  itemsep=0pt,
+  parsep=0pt,
+  topsep=1pt,
+  partopsep=0pt,
+  label=\textbullet
+}
+
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{0pt}
+
+\begin{document}
+
+% QR code in top-right corner
+\begin{tikzpicture}[remember picture, overlay]
+  \node[anchor=north east, inner sep=0pt] at ([xshift=-0.5in, yshift=-0.3in]current page.north east) {
+    \includegraphics[width=0.7in]{/tmp/suhail-qr.png}
+  };
+\end{tikzpicture}
+
+% Header
+\begin{center}
+  {\fontsize{18}{20}\selectfont \textbf{SUHAIL TAJ}}\\[2pt]
+  {\fontsize{9.5}{11}\selectfont
+    Charlotte, NC \enspace$|$\enspace suhailtajshaik@gmail.com \enspace$|$\enspace +1 (469) 994-1765 \enspace$|$\enspace \href{https://linkedin.com/in/suhailtajshaik}{LinkedIn} \enspace$|$\enspace \href{https://github.com/suhailtajshaik}{GitHub}
+  }\\[2pt]
+  {\fontsize{9.5}{11}\selectfont \textit{``AI didn't replace me. It gave me superpowers.''}}
+\end{center}
+
+\section*{Summary}
+
+Sr.\ Software Engineer with 10+ years architecting scalable systems across Fortune 50 enterprises, with Technical Lead experience driving cross-functional teams. Full-stack expertise spanning React, Node.js, Spring Boot, and AWS --- combined with hands-on AI/ML and IoT product delivery. Built the Intelligent Inventory Variance Audit system driving \$6M+ in annual savings at Lowe's. Open-source contributor with published npm packages and production AI agent systems.
+
+\section*{Core Skills}
+
+{\fontsize{9}{10.5}\selectfont
+\textbf{Languages \& Frameworks:} React, React Native, TypeScript, Node.js, Python, Spring Boot, Angular \enspace$|$\enspace
+\textbf{Backend \& Data:} REST APIs, GraphQL, MongoDB, PostgreSQL, Redis, Kafka \enspace$|$\enspace
+\textbf{Cloud \& DevOps:} AWS (Lambda, EC2, S3, ECS, CloudWatch), Docker, Kubernetes, CI/CD \enspace$|$\enspace
+\textbf{Architecture:} Microservices, BFF Pattern, Event-Driven Architecture, System Design, NX Monorepo \enspace$|$\enspace
+\textbf{AI \& Emerging Tech:} AI/ML Integration, LLM Agent Systems, Computer Vision, IoT, BLE Mesh Networking \enspace$|$\enspace
+\textbf{Leadership:} Tech Lead, Cross-Functional Collaboration, Agile/Scrum, Mentorship, Technical Roadmapping
+}
+
+\section*{Experience}
+
+\textbf{Lowe's} \hfill \textbf{July 2023 -- Present}\\
+\textbf{Sr.\ Software Engineer} \hfill \textbf{Charlotte, NC}
+\begin{itemize}
+  \item Architected and delivered the \textbf{Intelligent Inventory Variance Audit} system, generating \textbf{\$6M+ in annual savings} through automated shrink detection and inventory reconciliation
+  \item Built IoT-enabled store provisioning UI, connecting hardware devices across \textbf{1,700+ retail locations} to a centralized management platform
+  \item Engineered shrink detection application using React.js, Node.js, and computer vision, reducing manual audit time and improving loss prevention accuracy
+  \item Developed predictive out-of-stock detection model --- awarded \textbf{2nd place at company-wide AI Hackathon} out of 100+ competing teams
+  \item Optimized DevOps pipeline, achieving \textbf{30\% improvement in software delivery time} through CI/CD automation
+\end{itemize}
+
+\textbf{7-Eleven} \hfill \textbf{Dec 2020 -- Jul 2023}\\
+\textbf{Sr.\ Full Stack Engineer} \hfill \textbf{Irving, TX}
+\begin{itemize}
+  \item Engineered enterprise POS applications using React, Node.js, AWS Lambda, and MongoDB --- deployed across \textbf{5,000+ store locations} nationwide
+  \item Designed and built a \textbf{PDF print engine as a service} using HTML Canvas, Chromium, and Docker --- processing thousands of templates daily
+  \item Developed serverless APIs on AWS Lambda with CloudWatch monitoring, reducing infrastructure costs while handling high-throughput data
+  \item Drove \textbf{30\% improvement in software delivery time} through CI/CD pipeline enhancements and automated testing workflows
+\end{itemize}
+
+\textbf{Verizon} \hfill \textbf{Feb 2020 -- Oct 2020}\\
+\textbf{Sr.\ Frontend Developer} \hfill \textbf{Irving, TX}
+\begin{itemize}
+  \item Built React/Redux-based POS system used by \textbf{thousands of Verizon store representatives} for customer transactions and device activations
+  \item Implemented enterprise-grade OAuth2/JWT security layer using Spring Boot, securing customer data across all POS interactions
+  \item Developed Spring reactive microservices, improving system throughput for high-concurrency retail operations
+\end{itemize}
+
+\textbf{Anthem} \hfill \textbf{Jun 2018 -- Feb 2020}\\
+\textbf{Technical Lead} \hfill \textbf{Irving, TX}
+\begin{itemize}
+  \item Led engineering team delivering content-driven healthcare applications using Angular, serving \textbf{45M+ health plan members}
+  \item Championed WCAG accessibility compliance across all consumer-facing applications, ensuring coverage for users with disabilities
+  \item Provided technical leadership through mentorship, architecture reviews, and code quality standards --- elevating team output
+\end{itemize}
+
+\textbf{T.\ Rowe Price} \hfill \textbf{Oct 2017 -- May 2018}\\
+\textbf{Sr.\ UI Developer} \hfill \textbf{Owings Mills, MD}
+\begin{itemize}
+  \item Built React, Redux, and TypeScript interfaces for investment management dashboards at a \textbf{\$1.6T asset management firm}
+  \item Developed Spring Boot RESTful APIs powering real-time financial data visualization for portfolio managers and advisors
+\end{itemize}
+
+\textbf{Verizon} \hfill \textbf{Oct 2015 -- Oct 2017}\\
+\textbf{Frontend Developer} \hfill \textbf{Irving, TX}
+\begin{itemize}
+  \item Architected core features for \textbf{ThingSpace}, Verizon's IoT cloud platform enabling device management for enterprise and consumer IoT solutions
+  \item Built \textbf{Smart City application for the City of Boston} --- street lighting control, digital signage management, and parking monitoring
+  \item Developed full-stack solutions using MEAN stack, PostgreSQL, Cassandra, and Docker, supporting millions of connected devices
+\end{itemize}
+
+\section*{Projects}
+\begin{itemize}
+  \item \textbf{SellBridge} --- Full-stack commerce platform enabling Indian sellers to list across ONDC network and WhatsApp. Built with React, Node.js, Fastify, PostgreSQL.
+  \item \textbf{react-native-ble-mesh \& mesh-transfer-protocol} --- Published 2 npm packages for BLE mesh networking in React Native with custom mesh protocol.
+  \item \textbf{Prompt Studio} --- Developer tool for crafting and testing prompts across LLM providers (OpenAI, Anthropic, Google) with version control and A/B testing.
+  \item \textbf{R2D2} --- Autonomous AI agent system with self-healing, multi-provider LLM integration, monitoring, and scheduled task orchestration.
+\end{itemize}
+
+\section*{Education}
+
+\textbf{MS Electrical Engineering} --- Wright State University, Dayton, OH (2013--2015) \enspace$|$\enspace \textbf{BTech Electronics \& Communication} --- JNTU Hyderabad (2008--2012)
+
+\end{document}

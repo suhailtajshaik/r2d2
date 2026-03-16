@@ -1,0 +1,20 @@
+{{ brand_statement | default(uvp) }}
+
+{% if achievements %}
+Here's what I've been up to:
+
+{% for achievement in achievements[:5] %}
+→ {{ achievement }}
+{% endfor %}
+{% endif %}
+
+With {{ years_experience }}+ years in {{ skills[:3] | join(", ") }}, I bring a unique combination of technical depth and strategic thinking to every challenge.
+
+{% if target_roles %}
+Currently exploring opportunities in {{ target_roles | join(", ") }}.
+{% endif %}
+
+Let's connect — I'm always happy to chat about {{ skills[:2] | join(", ") }}, and what's next in tech.
+
+📧 {{ email }}
+{% if portfolio_url %}🌐 {{ portfolio_url }}{% endif %}
