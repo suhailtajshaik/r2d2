@@ -189,3 +189,9 @@ The goal: Be helpful without being annoying. Check in a few times a day, do usef
 ## Make It Yours
 
 This is a starting point. Add your own conventions, style, and rules as you figure out what works.
+
+## Edit Tool Rule (learned from mistake)
+- **ALWAYS read the exact text before using the Edit tool**
+- Never guess whitespace, newlines, or formatting — they must match exactly
+- Pattern: grep/Read the lines → copy exact text → then Edit
+- If unsure: use sed or Read first to confirm the exact string

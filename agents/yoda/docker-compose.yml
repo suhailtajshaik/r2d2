@@ -1,0 +1,21 @@
+services:
+  yoda:
+    build: .
+    container_name: r2d2-yoda
+    restart: unless-stopped
+    volumes:
+      # Persist knowledge base and resources across restarts
+      - /home/r2d2/projects/yoda/knowledge:/app/knowledge
+      - /home/r2d2/projects/yoda/resources:/app/resources
+      - /home/r2d2/projects/yoda/src:/app/src
+      - /home/r2d2/projects/yoda/checkpoints:/app/checkpoints
+      # Brain backup sync
+      - /home/r2d2/brain/agents/yoda:/home/r2d2/brain/agents/yoda
+    environment:
+      - ANTHROPIC_API_KEY=${ANTHROPIC_API_KEY}
+      - NOTION_API_KEY=${NOTION_API_KEY:-}
+      - TZ=America/New_York
+      - YODA_LOG_LEVEL=INFO
+    # Run interactively via: docker compose run yoda learn --file paper.pdf
+    # Or keep alive for monitoring: override CMD to a loop
+    command: status

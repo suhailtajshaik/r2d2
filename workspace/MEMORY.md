@@ -10,8 +10,8 @@
 - Dad hates manual data entry (context: GST Ledger improvements)
 
 ## Work Experience
-- Engineering Leader: "I build products and the teams that ship them."
-- Career: Lowe's → 7-Eleven → Verizon → Anthem → T. Rowe Price → Verizon
+- Current role: Sr. Software Engineer at Lowes (Jul 2023–Present). Has NOT held Engineering Manager/Leader titles — but has Technical Lead experience (Anthem) and strong leadership credentials across Fortune 50 companies.
+- Career (newest first): Lowes → 7-Eleven → Verizon → Anthem → T. Rowe Price → Verizon
 - Stack: MERN + Python + SQL (explicitly NOT Java)
 - No Hyderabad/India location on portfolio — keep generic ("Open to Opportunities")
 
@@ -176,13 +176,16 @@
 - Multiple 3POs can run in parallel for independent tasks
 - Never block on agent completion before responding
 - I orchestrate, agents execute — I stay responsive at all times
+- **NEVER run long exec blocks before replying** — always background:true + reply first
+- Long tasks (PDF, audio, agent builds, installs) = background immediately, reply in same breath
+- Suhail explicitly called this out — 2-3 min delays are unacceptable. Fix: reply → background → notify on done
 
 ## Agent Naming Convention
 - **R2D2** — orchestrator, always responds first, dispatches agents
 - **Guardian** — 24/7 watchdog Docker container, silent self-healer
 - **Maxwell** — senior news editor, runs daily at 5 AM EST
 - **3PO** — Claude Code CLI, single coding partner, spawned on demand
-- **Swarm Troopers** — multiple parallel Claude Code instances for independent tasks
+- **R3PO (Swarm Troopers)** — multiple parallel Claude Code instances for independent tasks
   - Spawned when a task can be split into parallel workstreams
   - Each trooper owns exactly one isolated task
   - 3PO coordinates troopers, R2D2 orchestrates 3PO
@@ -193,7 +196,7 @@
 - Location: /home/r2d2/docker-catalog.md
 - Always-running: r2d2-nginx, r2d2-guardian, portfolio, lab, prompt-studio, news-site, localai
 - Guardian auto-prunes: reclaimable > 5GB → docker system prune
-- Swarm Troopers are ephemeral — not in catalog
+- R3PO Swarm Troopers are ephemeral — not in catalog
 
 ## PARA Method (Tiago Forte) — Notion Organization
 Applied to R2D2's Notion and brain. Organize by actionability:
@@ -245,3 +248,19 @@ Use when: shipping GST Ledger, SellBridge, any public-facing product
 - **Key rule:** NEVER adds skills candidate doesn't have — always verifies first
 - **Philosophy:** Every candidate is a brand. Top 1% globally.
 - **Market:** Can operate as standalone product for companies OR as personal career agent
+
+## Operating Rules (from Suhail — March 2026)
+- **Always reply to Suhail FIRST** before doing any work — no exceptions
+- **Consume mid-task input** — if Suhail sends a message while I'm working, pause, acknowledge, fold it into the current task if relevant, don't restart
+- Never make Suhail wait for a response while I'm executing something
+
+## Yoda — Self-Evolving JEPA Learning Agent
+- **Name:** Yoda 🧙
+- **Source:** /home/r2d2/projects/yoda/ | Brain: brain/agents/yoda/
+- **Docker:** r2d2-yoda (docker-compose.yml in project dir)
+- **CLI shorthand:** ./yoda.sh learn/evolve/status/train/demo
+- **Needs:** ANTHROPIC_API_KEY in .env for full Claude-powered evolution
+- **Suhail command syntax:** "Yoda learn", "Yoda evolve", "Yoda status" = I translate to CLI
+- **Knowledge base:** knowledge/*.md — grows as Suhail feeds resources
+- **Current version:** v0.3 — SelectiveDecoder, CostModule, ShortTermMemory, VICReg, MultiBlockMasking
+- **Goal:** Build real VL-JEPA model for e-commerce product embeddings + inventory counting

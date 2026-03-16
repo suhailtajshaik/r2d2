@@ -1,0 +1,35 @@
+model:
+  embed_dim: 384
+  patch_size: 16
+  depth: 6
+  num_heads: 6
+  predictor_depth: 3
+  language_model: "bert-base-uncased"
+  image_size: 224
+
+training:
+  batch_size: 32
+  learning_rate: 1.5e-4
+  weight_decay: 0.05
+  ema_momentum: 0.996
+  alignment_weight: 0.5
+  num_epochs: 100
+  checkpoint_every: 10
+  mixed_precision: true
+
+data:
+  train_dir: "data/train"
+  eval_dir: "data/eval"
+  hf_dataset: null
+  num_workers: 4
+  image_size: 224
+
+learner:
+  claude_model_extract: "claude-3-5-haiku-latest"
+  claude_model_evolve: "claude-sonnet-4-20250514"
+
+paths:
+  knowledge_dir: "knowledge"
+  src_dir: "src"
+  checkpoints_dir: "checkpoints"
+  logs_dir: "logs"
