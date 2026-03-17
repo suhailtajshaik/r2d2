@@ -84,3 +84,21 @@
 - Added MultiBlockMasking (rectangular, 4 blocks, ~50% coverage)
 - Added JEPAConfig dataclass (Configurator from mind map)
 **Knowledge gained:** Full JEPA architecture including support modules, selective decoding, VICReg training
+
+
+## [2026-03-16] v0.4 — End-to-end trainable model
+Trigger: Suhail said "build the model now" — 3PO + Yoda working in parallel
+Changes:
+- demo.py — full end-to-end forward/backward pass verified
+- train_small.py — mini training run on synthetic data (3 epochs, 75 steps, loss 1.40→0.89)
+- All shape mismatches fixed
+- VisionEncoder updated to forward extra kwargs (depth, num_heads) to timm
+- Model is now trainable end-to-end on CPU
+Status: Ready for real dataset (ABO) when GPU available
+## Version 0.0.1 [2026-03-16 11:48]
+**Trigger:** code_evolver.evolve()
+**Reason:** Knowledge-driven code evolution
+
+### Changes
+- [SKIP] Parse Error -- file not found: src/
+

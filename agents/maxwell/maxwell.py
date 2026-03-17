@@ -157,6 +157,13 @@ def main():
     if articles:
         save_articles(articles, date_path, date_file)
         print(f"\n✅ Maxwell done — {len(articles)} articles ready for publication")
+        # Regenerate index.json so the news site picks up the new edition
+        try:
+            import subprocess
+            subprocess.run(["python3", "/home/r2d2/tools/generate-index.py"], check=True)
+            print("📋 index.json updated")
+        except Exception as e:
+            print(f"⚠️  Could not update index.json: {e}")
         return articles
     else:
         print("\n❌ Maxwell failed to produce articles")
