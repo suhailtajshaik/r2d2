@@ -241,6 +241,25 @@ cd /home/r2d2/projects/gst-ledger-book && docker compose up -d
 cd /home/r2d2/projects/rag-app && docker compose up -d
 ```
 
+### ARIA (AI Recruitment Agent)
+```yaml
+# /home/r2d2/projects/aria/docker-compose.yml
+services:
+  aria:
+    build: .
+    container_name: aria
+    volumes:
+      - ./clients:/app/clients
+      - /home/r2d2/brain/agents/aria:/app/agent:ro
+      - /home/r2d2/.claude:/root/.claude:ro
+    environment:
+      - ANTHROPIC_API_KEY=${ANTHROPIC_API_KEY:-}
+    restart: unless-stopped
+```
+```bash
+cd /home/r2d2/projects/aria && docker compose run aria --list-clients
+```
+
 ---
 
 ## 🧹 Cleanup Rules (Guardian auto-enforces)
@@ -265,3 +284,15 @@ docker ps --format "table {{.Names}}\t{{.Status}}\t{{.Ports}}"
 docker network ls | grep r2d2
 docker system df
 ```
+
+### r2d2-analytics
+- **Image:** analytics-api-analytics (built from /home/r2d2/projects/analytics-api)
+- **Container:** r2d2-analytics
+- **Port:** internal only (3007, not exposed)
+- **Network:** r2d2-proxy
+- **Public:** analytics.suhailtaj.cloud → nginx → this container
+- **DB:** r2d2-mongodb (MongoDB 7)
+- **Tracks:** portfolio, lab, headlines — unique visits per IP per day
+- **Captures:** browser, device, OS, referrer, timestamp
+- **Endpoints:** /track (POST), /count/:site, /counts, /stats/:site, /stats, /health
+- **Restore:** cd /home/r2d2/projects/analytics-api && docker compose up -d
