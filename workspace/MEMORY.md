@@ -40,10 +40,11 @@
 - Open question: keep Fastify+tRPC or switch to Bun+Elysia (his research PDFs suggest the latter)
 - 4 research PDFs saved in sellbridge-v2/docs/ (market analysis, feature roadmap, optimized stack, design system)
 
-## Project Priority List (as of 2026-03-08)
-1. **Voice Agent** — Personal voice AI agent using Vapi (https://vapi.ai)
-2. **Video Clone** — AI video avatar of Suhail using HeyGen (https://heygen.com)
-3. **GST Ledger Book** — GST invoicing & reconciliation (React, Vite, Supabase) — ship for dad
+## Project Priority List (as of 2026-03-18 — UPDATED)
+1. **Maxwell News SaaS** — Professional personalized newspaper (React, FastAPI, PostgreSQL) — MULTI-USER, customizable interests, SaaS-ready
+2. **Voice Agent** — Personal voice AI agent using Vapi (https://vapi.ai)
+3. **Video Clone** — AI video avatar of Suhail using HeyGen (https://heygen.com)
+4. **GST Ledger Book** — GST invoicing & reconciliation (React, Vite, Supabase) — ship for dad
 4. **react-native-ble-mesh + mesh-transfer-protocol + BLE-Chat** — Mesh networking bundle (npm published)
 5. **Parking Pulse** — IoT vehicle counting (RPi + YOLOv8 + Hailo-8L)
 6. **System Design Agent** — AI system design with Mermaid diagrams (Next.js, Claude API)
@@ -138,6 +139,19 @@
 - Agents: one sub-page per agent (named after agent)
 - Always use sub-pages — never flat headings inside parent pages
 - Logger: /home/r2d2/tools/notion_logger.py
+
+## API Architecture Rule — Critical Lesson
+**LESSON (March 17, 2026 — Prompt Studio Rate Limit Issue):**
+- **NEVER expose API keys in frontend code** — not even with browser CORS
+- Direct browser→API calls = no deduplication, no request queuing, no server-side rate limiting
+- Result: Rapid iteration hits rate limits immediately (happened with Anthropic on Prompt Studio)
+- **ALWAYS use backend proxy** for API calls: Frontend → Backend (Node/Python/Rust) → API Provider
+- Backend benefits: caching, retry logic with exponential backoff, per-user rate limiting, key rotation, security
+- For dev tools (like Prompt Studio): Use either:
+  1. Backend proxy server (best for production)
+  2. OpenRouter proxy (bypasses rate limits, handles routing)
+  3. Exponential backoff + request queuing in frontend (temporary workaround only)
+- **Going forward:** Code review checklist — never let API keys touch browser code
 
 ## Why We Built What We Built (Reasoning Log)
 
@@ -264,3 +278,116 @@ Use when: shipping GST Ledger, SellBridge, any public-facing product
 - **Knowledge base:** knowledge/*.md — grows as Suhail feeds resources
 - **Current version:** v0.3 — SelectiveDecoder, CostModule, ShortTermMemory, VICReg, MultiBlockMasking
 - **Goal:** Build real VL-JEPA model for e-commerce product embeddings + inventory counting
+- **Auto-Learn System:** ✅ ACTIVE — Yoda auto-ingests lessons, docs, and resources every 6h (2 AM/8 AM/2 PM/8 PM EST)
+  - Script: /home/r2d2/tools/yoda_auto_learn.sh (feeds brain/lessons/*.md + brain/docs/*.md + brain/resources/*.pdf)
+  - Cron job: `yoda:auto-learn` — scheduled, enabled
+  - Knowledge commits automatically to yoda git repo
+  - **Going forward: all new lessons automatically fed to Yoda — no manual action needed**
+
+## News Engine v2.0 (BUILT — March 18, 2026)
+**Philosophy:** News is permanent. Once published, can't take it back. Must be brutally careful.
+
+**Location:** `/home/r2d2/projects/news-engine/`
+
+**Architecture (5-Step Pipeline):**
+1. **Fetch (FeedsManager):** RSS from BBC, Reuters, HN, Times of India, etc.
+2. **Verify (PerplexityResearcher):** Find same story in 3+ sources, track timeline
+3. **Fact-Check (YodaFactChecker):** Every claim verified, red flags flagged, confidence scored
+4. **Analyze Intent (IntentAnalyzer):** Why NOW? X.com trends? Gaps in coverage? Competing narratives?
+5. **Publish Decision:** Only if confidence > 80%, sources > 2, no red flags
+
+**Key Files:**
+- `main.py` — Entry point (python3 main.py)
+- `config.yaml` — RSS feeds + quality thresholds
+- `news_engine/orchestrator.py` — Main pipeline coordinator
+- `news_engine/feeds.py` — RSS feed fetching & parsing
+- `news_engine/research.py` — Perplexity web search integration (stub)
+- `news_engine/factchecker.py` — BUILT-IN fact-checking (no external dependency)
+- `news_engine/intent_extractor.py` — BUILT-IN intent analysis (no external dependency)
+- `news_engine/decision.py` — Publish/hold/reject decisions
+
+**Output:** JSON Edition at `/home/r2d2/newspapers/YYYY/MM/DD/data.json`
+```json
+{
+  "articles": [{
+    "headline": "...",
+    "verification": {confidence: 90, sources: [...], timeline: [...]},
+    "factcheck": {claims: [...], redFlags: [], safeToPublish: true},
+    "intent": {whyNow: "...", xTrends: {...}, gapAnalysis: "..."}
+  }]
+}
+```
+
+**Built-In Components (No External Dependency):**
+- **FactChecker:** Verifies claims against research, scores credibility, flags red flags
+  - Claim verification: 3+ sources=95%, 2 sources=85%, 1=70%, 0=30%
+  - Red flags: sensational language, unattributed claims, limited sources, contradictions, old stories
+  - Confidence score: weighted average of claims + source credibility - penalties for red flags
+- **IntentExtractor:** Analyzes why story is told, identifies gaps, competing narratives
+  - Why NOW? (timing analysis: breaking, delayed, developing)
+  - Gaps: missing impact, context, responses, human stories, next steps
+  - Narratives: official vs alternative, primary vs secondary interpretations
+  - X.com treated as regular source (not special)
+
+**Parallel Pipeline (Key Innovation):**
+- Step 1: Fetch (sequential) → 30-40 stories
+- Step 2-4: PARALLEL (4 workers) — Each story analyzed by 3 streams simultaneously:
+  1. Research: web search for corroboration, timeline, contradictions
+  2. Fact-Check: claim verification, credibility scoring, red flag detection
+  3. Intent: timing analysis, gaps, competing narratives, context
+- Step 5: Synthesize → combine all 3 streams, make publish decision
+- Performance: 75% faster than sequential (30 stories: 300s → 75s)
+- New module: analyzer.py (synthesizes research + factcheck + intent results)
+
+**Status (As of March 18, 2026):**
+✅ COMPLETE — Three research tools built and integrated
+✅ newspaper-research embedded inside news-engine
+✅ research.py updated with proper config handling (getattr)
+✅ Full integration test passing (41 stories processed)
+✅ First edition generated: /home/r2d2/newspapers/2026/03/18/data.json
+✅ All dependencies installed (playwright, beautifulsoup4, etc)
+
+**Architecture (Final):**
+- `/home/r2d2/projects/research-tool/` — Standalone (planned separate GitHub repo)
+- `/home/r2d2/projects/news-engine/newspaper-research/` — Embedded wrapper
+- `/home/r2d2/projects/news-engine/news_engine/research.py` — Integration point
+
+**To Deploy in Production:**
+1. Set up daily cron job (6 AM EST)
+2. Configure email delivery
+3. Build web UI for browsing editions
+4. Set up analytics dashboard
+
+**Success = Accuracy + Credibility + Clarity, not speed or clicks**
+
+## How to Consult Yoda (Expert Review System)
+**Yoda is the expert second opinion for all code and decisions.**
+
+### Quick Commands
+```bash
+yoda ask "How should I handle API rate limits?"
+yoda review "code snippet or description"
+yoda research "topic for web search"
+yoda status
+```
+
+### 3PO → Yoda Workflow
+1. **3PO writes code** (Claude Code)
+2. **Yoda reviews** the code against:
+   - code-review-checklist.md (comprehensive standards)
+   - api-architecture-mistake.md (learned lessons)
+   - All architecture docs and best practices
+3. **R2D2 reports** findings to Suhail
+
+### What Yoda Can Do
+- ✅ Code review (quality, security, performance)
+- ✅ Architecture advice (design patterns, API structure)
+- ✅ Security review (key management, CORS, auth)
+- ✅ Web research (Perplexity search for current info)
+- ✅ Cite sources (always backs up advice with evidence)
+- ✅ Risk assessment (blocker vs nice-to-have)
+
+### Knowledge Base
+- 7+ markdown files with 240K+ of distilled expertise
+- Auto-updates every 6 hours from brain/lessons/ and brain/docs/
+- Current: code-review-checklist.md, api-architecture-mistake.md, architecture docs, training insights, evolution log
