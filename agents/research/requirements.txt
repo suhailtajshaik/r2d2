@@ -1,0 +1,12 @@
+# Research Agent Dependencies
+
+# Core dependencies (minimal - most functionality uses OpenClaw tools)
+python-dateutil>=2.8.2
+requests>=2.31.0
+
+# Optional: For enhanced analysis
+numpy>=1.24.0
+textblob>=0.17.1
+
+# OpenClaw integration (when running in OpenClaw environment)
+# openclaw>=1.0.0  # Uncomment when deployed in OpenClaw
