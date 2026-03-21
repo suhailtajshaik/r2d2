@@ -1,0 +1,15 @@
+services:
+  mongodb:
+    image: mongo:7-jammy
+    container_name: r2d2-mongodb
+    restart: unless-stopped
+    environment:
+      MONGO_INITDB_DATABASE: analytics
+    volumes:
+      - /home/r2d2/data/mongodb:/data/db
+    networks:
+      - r2d2-proxy
+
+networks:
+  r2d2-proxy:
+    external: true
