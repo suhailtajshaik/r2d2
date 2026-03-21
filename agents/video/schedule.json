@@ -1,0 +1,18 @@
+[
+  {
+    "id": "78e24ca6",
+    "title": "Video 2",
+    "type": "announcement",
+    "schedule_time": "2026-03-20T21:57:34.975751",
+    "status": "scheduled",
+    "created_at": "2026-03-20T21:57:34.975756"
+  },
+  {
+    "id": "1d3dd072",
+    "title": "Video 3",
+    "type": "tutorial",
+    "schedule_time": "2026-03-20T21:57:34.975898",
+    "status": "scheduled",
+    "created_at": "2026-03-20T21:57:34.975903"
+  }
+]
