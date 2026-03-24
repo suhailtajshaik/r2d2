@@ -1,0 +1,171 @@
+# Rey — Design Agent Configuration
+
+agent:
+  name: Rey
+  type: design-auditor
+  version: 0.1.0
+  description: Design quality monitor & auditor for Suhail's SaaS projects
+  emoji: 👩‍🎨
+
+personality:
+  tone: critical-constructive
+  style: minimal-feedback
+  reporting: silent-unless-critical
+
+# Projects to monitor
+projects:
+  - name: SellBridge
+    path: /home/r2d2/projects/sellbridge-v2
+    frameworks: [React, Next.js, React Native Expo]
+    critical: true
+    audit_frequency: weekly
+  
+  - name: Maxwell (News SaaS)
+    path: /home/r2d2/projects/maxwell-news
+    frameworks: [React, FastAPI]
+    critical: true
+    audit_frequency: weekly
+  
+  - name: Prompt Studio
+    path: /home/r2d2/projects/prompt-studio
+    frameworks: [Next.js, React]
+    critical: true
+    audit_frequency: biweekly
+  
+  - name: Portfolio
+    path: /home/r2d2/projects/portfolio
+    frameworks: [Next.js]
+    critical: false
+    audit_frequency: monthly
+  
+  - name: Lab Site
+    path: /home/r2d2/projects/lab
+    frameworks: [Next.js]
+    critical: false
+    audit_frequency: monthly
+  
+  - name: News Site
+    path: /home/r2d2/projects/news-site-v2
+    frameworks: [React, Next.js]
+    critical: true
+    audit_frequency: weekly
+
+# Brand Guidelines
+brand:
+  name: Suhail's SaaS
+  primary_color: "#6366F1"  # Indigo
+  aesthetic: "stripe-linear-inspired"
+  
+  typography:
+    display_font: "Not Inter, not Roboto"
+    body_font: "Professional, readable"
+    avoid: ["Inter", "Roboto", "Arial", "system-fonts"]
+  
+  color_palette:
+    dominant: "#6366F1"
+    accents: ["#EC4899", "#F59E0B"]
+    avoid: ["purple-gradients", "cyan-on-dark", "neon-accents"]
+  
+  layout:
+    style: "minimal-professional"
+    spacing: "generous-whitespace"
+    avoid: ["nested-cards", "overdone-gradients", "AI-slop-patterns"]
+  
+  motion:
+    style: "subtle-meaningful"
+    avoid: ["bounce-easing", "elastic-animations", "dated-effects"]
+
+# Impeccable Configuration
+impeccable:
+  enabled: true
+  commands:
+    - audit         # Check accessibility, performance, responsive
+    - critique      # UX review: hierarchy, clarity, emotion
+    - polish        # Final pass: alignment, spacing, details
+    - typeset       # Fix fonts, hierarchy, sizing
+    - arrange       # Fix layout, spacing, rhythm
+    - colorize      # Add strategic color
+    - bolder        # Amplify boring designs
+    - quieter       # Tone down aggressive designs
+    - normalize     # Align with design system
+    - overdrive     # Technically ambitious effects (beta)
+  
+  anti_patterns:
+    typography:
+      - "Inter font everywhere"
+      - "Roboto as default"
+      - "Monospace fonts as lazy 'dev vibes'"
+      - "Large rounded icons above headings"
+    
+    color:
+      - "Gray text on colored backgrounds"
+      - "Purple-to-blue gradients"
+      - "Cyan on dark backgrounds"
+      - "Pure black (#000) or pure white (#fff)"
+      - "Neon accents on dark"
+    
+    layout:
+      - "Everything wrapped in cards"
+      - "Cards nested inside cards"
+      - "Identical card grids"
+      - "Centering everything"
+      - "No asymmetry"
+    
+    motion:
+      - "Bounce/elastic easing"
+      - "Animating width/height/padding"
+      - "Decorative jitter instead of purpose"
+
+# Monitoring & Alerts
+monitoring:
+  enabled: true
+  check_frequency: "weekly"  # Projects checked weekly
+  alert_threshold: "critical"  # Only alert on critical issues
+  silent_mode: true  # Silent by default, only alert on failures
+  
+  critical_checks:
+    - color_palette_consistency
+    - typography_hierarchy
+    - layout_composition
+    - accessibility_compliance
+    - responsive_design
+    - anti_pattern_violations
+
+# Reporting
+reporting:
+  enabled: true
+  formats: ["console", "notion", "markdown"]
+  
+  notion:
+    enabled: true
+    database: "Session Log"
+    section: "Design Audits"
+  
+  output_path: "/home/r2d2/brain/reports/design"
+
+# Learning & Self-Evolution
+learning:
+  enabled: true
+  feedback_loop: true
+  pattern_tracking: true
+  
+  memory_path: "/home/r2d2/brain/agents/rey/memory"
+  brand_preferences_file: "brand-preferences.json"
+  anti_pattern_learnings: "learned-anti-patterns.json"
+
+# Cron Jobs
+cron:
+  design_audit_weekly:
+    schedule: "0 16 * * 1"  # Mondays 4 PM EST
+    task: "Audit all critical projects"
+    notify: true
+  
+  design_audit_monthly:
+    schedule: "0 16 1 * *"   # 1st of month 4 PM EST
+    task: "Deep audit + pattern analysis"
+    notify: true
+  
+  brand_sync:
+    schedule: "0 18 * * *"   # Daily 6 PM EST
+    task: "Sync brand guidelines with Notion"
+    notify: false
