@@ -300,9 +300,9 @@ class Rey:
         """Generate and display audit report."""
         project = results.get('project', 'Unknown')
         summary = results.get('summary', {})
-        status = summary.get('status', 'unknown')
+        status = summary.get('status', 'pass')
         
-        status_emoji = {"pass": "✅", "warning": "⚠️", "fail": "❌"}[status]
+        status_emoji = {"pass": "✅", "warning": "⚠️", "fail": "❌"}.get(status, "❓")
         
         print(f"\n{status_emoji} {project}")
         print(f"   Status: {status.upper()}")
