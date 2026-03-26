@@ -25,6 +25,11 @@ def run_all_checks():
         check_newspaper_generator,
         check_docker_disk_usage,
         check_inflight_agents,
+        check_prompt_studio_prod,
+        check_prompt_studio_dev,
+        check_prompt_studio_assets,
+        check_nginx_config,
+        check_nginx_network,
     ]
     results = []
     for check_fn in checks:
@@ -296,3 +301,107 @@ def check_inflight_agents():
         return ("In-Flight Agents", True, "No agents running")
     except Exception as e:
         return ("In-Flight Agents", True, "Check skipped")  # Non-critical
+
+
+def check_prompt_studio_prod():
+    """Check if Prompt Studio prod is responding with HTML."""
+    try:
+        result = subprocess.run(
+            ["curl", "-s", "-m", "5", "http://localhost:3001"],
+            capture_output=True, text=True
+        )
+        if result.returncode != 0:
+            return ("Prompt Studio Prod", False, "Connection timeout")
+        if "Prompt Studio" not in result.stdout:
+            return ("Prompt Studio Prod", False, "HTML missing or blank page")
+        if '<title>' not in result.stdout:
+            return ("Prompt Studio Prod", False, "Page structure broken")
+        return ("Prompt Studio Prod", True, "HTML loads correctly")
+    except Exception as e:
+        return ("Prompt Studio Prod", False, str(e))
+
+
+def check_prompt_studio_dev():
+    """Check if Prompt Studio dev is responding with HTML."""
+    try:
+        result = subprocess.run(
+            ["curl", "-s", "-m", "5", "http://localhost:3000"],
+            capture_output=True, text=True
+        )
+        if result.returncode != 0:
+            return ("Prompt Studio Dev", False, "Connection timeout")
+        if "Prompt Studio" not in result.stdout:
+            return ("Prompt Studio Dev", False, "HTML missing or blank page")
+        if '<title>' not in result.stdout:
+            return ("Prompt Studio Dev", False, "Page structure broken")
+        return ("Prompt Studio Dev", True, "HTML loads correctly")
+    except Exception as e:
+        return ("Prompt Studio Dev", False, str(e))
+
+
+def check_prompt_studio_assets():
+    """Check if asset paths are correct (prod=/prompt-studio/, dev=/prompt-studio-dev/)."""
+    try:
+        # Check prod assets
+        result_prod = subprocess.run(
+            ["curl", "-s", "-m", "5", "http://localhost:3001"],
+            capture_output=True, text=True
+        )
+        if '/prompt-studio/assets/' not in result_prod.stdout:
+            return ("Prompt Studio Assets", False, "Prod: assets loading from wrong path (expected /prompt-studio/assets/)")
+        
+        # Check dev assets
+        result_dev = subprocess.run(
+            ["curl", "-s", "-m", "5", "http://localhost:3000"],
+            capture_output=True, text=True
+        )
+        if '/prompt-studio-dev/assets/' not in result_dev.stdout:
+            return ("Prompt Studio Assets", False, "Dev: assets loading from wrong path (expected /prompt-studio-dev/assets/)")
+        
+        return ("Prompt Studio Assets", True, "Both prod and dev loading correct asset paths")
+    except Exception as e:
+        return ("Prompt Studio Assets", False, str(e))
+
+
+def check_nginx_config():
+    """Check if nginx config has Prompt Studio routing configured."""
+    try:
+        nginx_conf = "/home/r2d2/nginx/nginx.conf"
+        with open(nginx_conf, "r") as f:
+            content = f.read()
+        
+        if "prompt-studio-dev" not in content or "prompt-studio" not in content:
+            return ("Nginx Config", False, "Missing Prompt Studio proxy configuration")
+        
+        if "proxy_pass http://prompt-studio" not in content:
+            return ("Nginx Config", False, "Missing reverse proxy for Prompt Studio containers")
+        
+        return ("Nginx Config", True, "Prompt Studio routing configured")
+    except Exception as e:
+        return ("Nginx Config", False, str(e))
+
+
+def check_nginx_network():
+    """Check if nginx is on the correct Docker networks."""
+    try:
+        result = subprocess.run(
+            ["docker", "inspect", "r2d2-nginx", "--format", "{{json .NetworkSettings.Networks}}"],
+            capture_output=True, text=True, timeout=10
+        )
+        if result.returncode != 0:
+            return ("Nginx Network", False, "Nginx container not found")
+        
+        networks = json.loads(result.stdout)
+        network_names = list(networks.keys()) if networks else []
+        
+        # Check for required networks
+        if not network_names:
+            return ("Nginx Network", False, "Nginx not connected to any networks")
+        
+        # Should be on r2d2-proxy or r2d2_r2d2-proxy
+        if "r2d2-proxy" not in network_names and "r2d2_r2d2-proxy" not in network_names:
+            return ("Nginx Network", False, f"Nginx on wrong networks: {network_names}")
+        
+        return ("Nginx Network", True, f"Nginx on networks: {network_names}")
+    except Exception as e:
+        return ("Nginx Network", False, str(e))
