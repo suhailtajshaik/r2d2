@@ -182,10 +182,12 @@ IF repeated feedback, stop iterating
 
 | Job | Schedule | Script | Purpose |
 |-----|----------|--------|---------|
-| r2d2:lesson-sync-yoda | Every 30 min | lesson-sync-yoda.py | Sync lessons to Yoda |
+| r2d2:lesson-sync-to-yoda | 2,8,14,20 EST | lesson-sync-yoda.py | Sync lessons to Yoda BEFORE it learns |
 | r2d2:daily-lesson-report | 9 AM EST daily | lesson-report.py | Daily summary |
-| yoda:auto-learn | 2,8,14,20 EST | (Yoda) | Yoda knowledge updates |
+| yoda:auto-learn | 2,8,14,20 EST | (Yoda) | Yoda learning cycle (lessons already synced) |
 | guardian:newspaper-monitor | Every 5 min | (Guardian) | Infrastructure monitoring |
+
+**Key timing:** Lesson sync runs FIRST (at 2,8,14,20), then Yoda learns from updated knowledge base
 
 ---
 
@@ -262,10 +264,11 @@ Content: Technical pattern + behavioral pattern + prevention rules
 
 **Stage 4: Automation**
 ```
-Committed → lesson-sync-yoda.py runs (every 30 min)
+Committed → At next 2/8/14/20 hour (Yoda learning time):
+→ lesson-sync-yoda.py runs FIRST
 → Copied to yoda/knowledge/yoda-lesson-nginx-spa-deployment.md
-→ Yoda reads and integrates
-→ Daily report: "1 lesson synced"
+→ Yoda runs and reads updated knowledge base
+→ Lesson integrated into Yoda's learning
 ```
 
 **Stage 5: Prevention**
