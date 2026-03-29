@@ -450,6 +450,21 @@ Result: Learning is now automatic, Yoda stays current, no manual steps
    - Patterns apply automatically
    - Never repeat same mistake
 
+7. **Choose one tool per file per session**
+   - Use Edit tool for all changes → then git commit
+   - OR use bash/exec to edit → then git commit
+   - NEVER: Edit tool → git commit → Edit tool again
+   - This prevents "exact text not found" errors and noise
+
+8. **Be autonomous, not guided (Level 3+ assistant)**
+   - Research before asking
+   - Analyze root causes, not symptoms
+   - Propose solutions with reasoning, not for permission
+   - Make decisions confidently
+   - Self-correct on failure without asking
+   - Reduce friction in every interaction
+   - Goal: Make it "feel less like asking for help" and "more like it just works"
+
 ---
 
 ## Summary: The Core Insight
