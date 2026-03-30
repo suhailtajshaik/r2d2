@@ -24,8 +24,8 @@ def main():
     print()
     
     try:
-        # Use dev output directory (still mounts same archive, but marked as dev)
-        dev_output_dir = '/home/r2d2/projects/news-site/public/archive'
+        # Use separate dev output directory
+        dev_output_dir = '/home/r2d2/projects/news-site/public/archive-dev'
         
         # Initialize runner
         runner = NewspaperRunner(
