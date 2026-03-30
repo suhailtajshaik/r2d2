@@ -4,7 +4,7 @@
 
 **Parallel Pipelines Live:**
 - ✅ **Production:** https://news.suhailtaj.cloud (Maxwell pipeline, 5 AM & 10 AM EST)
-- ✅ **Dev:** https://lab.suhailtaj.cloud/the-headlines-today-dev/ (News Engine, 11 AM EST)
+- ✅ **Dev:** https://news-dev.suhailtaj.cloud (News Engine, 11 AM EST)
 
 ## Architecture
 
@@ -14,7 +14,7 @@ PRODUCTION (Maxwell):
   10 AM EST ──→ (same pipeline)
   
 DEV (News Engine):
-  11 AM EST ──→ generate-dev-edition.py ──→ News orchestrator ──→ lab.suhailtaj.cloud/the-headlines-today-dev/
+  11 AM EST ──→ generate-dev-edition.py ──→ News orchestrator ──→ news-dev.suhailtaj.cloud
 
 Both mount same archive:
   /home/r2d2/projects/news-site/public/archive/YYYY/MM/DD/
@@ -64,7 +64,7 @@ https://news.suhailtaj.cloud/archive/2026/03/31/
 
 **Dev (News Engine):**
 ```
-https://lab.suhailtaj.cloud/the-headlines-today-dev/archive/2026/03/31/
+https://news-dev.suhailtaj.cloud/archive/2026/03/31/
 ```
 
 Both show:
@@ -76,7 +76,7 @@ Both show:
 
 After next 11 AM generation:
 1. Check prod: `curl https://news.suhailtaj.cloud/archive/2026/03/31/data.json | jq '.articles | length'`
-2. Check dev: `curl https://lab.suhailtaj.cloud/the-headlines-today-dev/archive/2026/03/31/data.json | jq '.articles | length'`
+2. Check dev: `curl https://news-dev.suhailtaj.cloud/archive/2026/03/31/data.json | jq '.articles | length'`
 3. Compare article counts (should be 18-24 vs 100+)
 
 ### Monitor Logs
