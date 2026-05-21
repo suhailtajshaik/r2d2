@@ -249,30 +249,10 @@ def main():
     subprocess.run(['bash', '/home/r2d2/projects/news-site/scripts/generate-index.sh'])
     print(f"✅ News site index updated")
 
-    # Step 6: Send PDF via WhatsApp
-    ws_pdf = f"/home/r2d2/.openclaw/workspace/headlines-{date_file}.pdf"
-    subprocess.run(['cp', pdf_path, ws_pdf])
-    subprocess.run([
-        'openclaw', 'message', 'send', '--channel', 'whatsapp',
-        '--target', '+14699941765',
-        '--media', ws_pdf,
-        '--message', f"📰 The Headlines Today — {date_str}\nEdited by Maxwell · {len(articles)} stories"
-    ])
-    os.remove(ws_pdf)
-
-    # Step 7: Send audio via WhatsApp
-    ws_audio = f"/home/r2d2/.openclaw/workspace/headlines-{date_file}.mp3"
-    subprocess.run(['cp', audio_path, ws_audio])
-    subprocess.run([
-        'openclaw', 'message', 'send', '--channel', 'whatsapp',
-        '--target', '+14699941765',
-        '--media', ws_audio,
-        '--message', "🎙️ Audio briefing — The Headlines Today"
-    ])
-    os.remove(ws_audio)
+    # Step 6: Delivery is complete; assets remain archived on the news site.
 
     print(f"\n✅ The Headlines Today — DONE")
-    print(f"   PDF + Audio sent to WhatsApp")
+    print(f"   PDF + Audio archived on news site")
     print(f"   Archive: {archive_dir}")
 
 if __name__ == '__main__':

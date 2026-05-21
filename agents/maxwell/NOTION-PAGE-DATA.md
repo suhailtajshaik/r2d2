@@ -59,7 +59,7 @@ Output: `/home/r2d2/newspapers/` & `/home/r2d2/reports/`
 
 ### Logs
 - Newspaper: `/var/log/maxwell.log`
-- Workflows: `/home/r2d2/.openclaw/workspace/memory/maxwell_*.log`
+- Workflows: `/home/r2d2/brain/memory/maxwell_*.log`
 
 ### Features
 - RSS feed aggregation (40+ sources)
