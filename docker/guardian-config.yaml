@@ -4,103 +4,94 @@
 # Auto-fix silently. Alert only if critical (>2 issues persisting).
 
 watchlist:
-  newspaper_pipeline:
+  headlines_today_pipeline:
     name: "The Headlines Today Pipeline"
     description: "Monitor RSS fetch → PDF/audio generation → web deployment"
     critical: true
+    report_mode: "on_change"  # Only report when state changes, not on every check
     checks:
       - name: "Daily cron job"
         type: "cron"
-        resource: "r2d2:daily-newspaper"
-        interval: 3600  # Check every hour
+        resource: "r2d2:headlines-today"
+        interval: 14400  # Check every 4 hours
         alert_if: "status != ok"
         
-      - name: "Latest newspaper exists"
+      - name: "Latest Headlines Today edition exists"
         type: "file"
-        path: "/home/r2d2/newspapers/{DATE}/data.json"
-        interval: 300
+        path: "/home/r2d2/headlines-today/{DATE}/data.json"
+        interval: 86400  # Check daily (once per 24h)
         alert_if: "missing_or_stale"  # If >26 hours old
         
       - name: "PDF generated"
         type: "file"
-        path: "/home/r2d2/newspapers/{DATE}/newspaper.pdf"
-        interval: 300
+        path: "/home/r2d2/headlines-today/{DATE}/headlines-today.pdf"
+        interval: 86400  # Check daily
         min_size: 10240  # At least 10 KB
         alert_if: "missing_or_too_small"
         
       - name: "Audio generated"
         type: "file"
-        path: "/home/r2d2/newspapers/{DATE}/newspaper.mp3"
-        interval: 300
+        path: "/home/r2d2/headlines-today/{DATE}/headlines-today.mp3"
+        interval: 86400  # Check daily
         min_size: 100000  # At least 100 KB
         alert_if: "missing_or_too_small"
         
       - name: "Web deployment"
         type: "http"
         url: "https://news.suhailtaj.cloud/archive/{DATE}/data.json"
-        interval: 600
+        interval: 86400  # Check daily
         expected_status: 200
         alert_if: "not_responding_or_404"
         
-      - name: "WhatsApp delivery"
+      - name: "Legacy delivery removed"
         type: "log"
-        source: "/tmp/openclaw/openclaw-2026-03-*.log"
-        interval: 1800
-        search: "WhatsApp.*newspaper|delivery.*success"
+        source: "/tmp/guardian/guardian.log"
+        interval: 86400  # Check daily
+        search: "All checks passed|Headlines Today pipeline healthy"
         alert_if: "no_match_in_24h"
 
 remediation:
-  newspaper_generation_failed:
+  headlines_today_generation_failed:
     trigger: "data.json missing or stale"
     steps:
       - action: "restart_cron"
         job: "r2d2:daily-newspaper"
       - action: "run_manual"
-        command: "node /home/r2d2/generate-newspaper.js"
+        command: "python3 /home/r2d2/projects/news-engine/generate-dev-edition.py"
       - action: "rebuild_site"
-        dir: "/home/r2d2/projects/news-site-v2"
+        dir: "/home/r2d2/projects/the-headlines-today"
         
   audio_generation_failed:
-    trigger: "newspaper.mp3 missing or <100KB"
+    trigger: "headlines-today.mp3 missing or <100KB"
     steps:
       - action: "regenerate_audio"
         script: "/home/r2d2/tools/regenerate-audio.sh"
       - action: "update_deployment"
-        source: "/home/r2d2/newspapers/{DATE}/newspaper.mp3"
-        dest: "/home/r2d2/projects/news-site-v2/public/archive/{DATE}/"
+        source: "/home/r2d2/headlines-today/{DATE}/headlines-today.mp3"
+        dest: "/home/r2d2/headlines-today/{DATE}/"
         
   web_deployment_failed:
     trigger: "HTTP 404 or connection timeout"
     steps:
       - action: "sync_files"
-        source: "/home/r2d2/newspapers/{DATE}/"
-        dest: "/home/r2d2/projects/news-site-v2/public/archive/{DATE}/"
+        source: "/home/r2d2/headlines-today/{DATE}/"
+        dest: "/home/r2d2/headlines-today/{DATE}/"
       - action: "rebuild_site"
-        dir: "/home/r2d2/projects/news-site-v2"
+        dir: "/home/r2d2/projects/the-headlines-today"
       - action: "restart_container"
-        container: "news-site"
+        container: "the-headlines-today"
         
-  whatsapp_delivery_failed:
-    trigger: "No delivery logs in 24h"
-    steps:
-      - action: "check_gateway"
-        command: "openclaw gateway status"
-      - action: "reconnect_whatsapp"
-        command: "openclaw channels login --channel whatsapp --account default"
-      - action: "manual_send"
-        message: "Newspaper delivery failed. Manual resend required."
-
 alerts:
   critical:
     threshold: 1  # Alert immediately on first critical failure
-    notify: ["whatsapp://+14699941765", "memory:///home/r2d2/.openclaw/workspace/memory/"]
+    notify: ["memory:///home/r2d2/brain/memory/"]  # Removed WhatsApp — log to memory only
     escalate_after: "6h"  # If unresolved after 6 hours, escalate
 
   warning:
     threshold: 3  # Alert after 3 warnings in 24h
-    notify: ["memory:///home/r2d2/.openclaw/workspace/memory/"]
+    notify: ["memory:///home/r2d2/brain/memory/"]  # Log to memory only
 
 logging:
   level: "INFO"
-  output: "/tmp/guardian-newspaper.log"
+  output: "/tmp/guardian-headlines-today.log"
   rotate: "daily"

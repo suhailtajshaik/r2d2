@@ -8,7 +8,7 @@ Uses:
 - Intent analysis (built-in)
 - PDF + audio output
 
-TODO: Re-enable web_search research when running as OpenClaw subagent
+TODO: Re-enable web_search research when running as Hermes subagent
 This is the core purpose of news-engine: FACT-CHECKING with verification.
 Current: Fact-check without verification (uses built-in claims analysis only)
 Future: Add web_search-based research for full verification capability
@@ -41,7 +41,7 @@ class FastNewspaperRunner:
     def __init__(
         self,
         config_path: str = 'config.yaml',
-        output_dir: str = '/home/r2d2/projects/news-site/public/archive-dev',
+        output_dir: str = '/home/r2d2/headlines-today',
         verbose: bool = False,
     ):
         """Initialize fast runner (skips research layer)."""
@@ -260,7 +260,7 @@ class FastNewspaperRunner:
             logger.info('⚠️  TODO: Enable web_search research layer')
             logger.info('   This is the core feature of news-engine!')
             logger.info('   Current: Fact-check without verification')
-            logger.info('   Future: Full research + fact-check (via OpenClaw subagent)')
+            logger.info('   Future: Full research + fact-check (via Hermes subagent)')
             
             return result
         
@@ -313,7 +313,7 @@ class FastNewspaperRunner:
         <body>
             <h1>📰 The Headlines Today</h1>
             <div class="date">{date_str}</div>
-            <div class="mode">⚠️ Fast Mode: Research layer skipped. Full verification coming soon when deployed as OpenClaw subagent.</div>
+            <div class="mode">⚠️ Fast Mode: Research layer skipped. Full verification coming soon when deployed as Hermes subagent.</div>
             {articles_html}
         </body>
         </html>

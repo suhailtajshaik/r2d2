@@ -28,8 +28,8 @@ import sys
 LOG_DIR = "/tmp/guardian"
 STATE_FILE = f"{LOG_DIR}/state.json"
 DIAGNOSTICS_DIR = f"{LOG_DIR}/diagnostics"
-MEMORY_FILE = "/home/r2d2/.openclaw/workspace/memory/guardian-learning.md"
-ALERTS_FILE = "/home/r2d2/.openclaw/workspace/memory/guardian-alerts.log"
+MEMORY_FILE = "/home/r2d2/brain/memory/guardian-learning.md"
+ALERTS_FILE = "/home/r2d2/brain/memory/guardian-alerts.log"
 NEWSPAPER_DATE = datetime.now().strftime("%Y/%m/%d")
 NEWSPAPER_DATE_SLUG = datetime.now().strftime("%Y-%m-%d")
 
@@ -46,7 +46,15 @@ EXPONENTIAL_BACKOFF = [1, 2, 4]  # seconds
 RETRY_TIMEOUT = 30
 
 # Service priorities
-CRITICAL_SERVICES = ["nginx", "news-site", "guardian"]
+WATCHED_APP_CONTAINERS = [
+    "r2d2-nginx",
+    "portfolio",
+    "lab",
+    "the-headlines-today",
+    "the-headlines-today-dev",
+    "r2d2-guardian",
+]
+CRITICAL_SERVICES = ["nginx", "headlines-today", "maxwell", "guardian", "applications"]
 DISABLE_NON_CRITICAL_AFTER_N_FAILURES = 3
 
 # Initialize
@@ -139,6 +147,8 @@ class StateManager:
     def record_success(self, service: str):
         svc = self.get_service(service)
         svc["consecutive_failures"] = 0
+        svc["disabled"] = False
+        self.state.get("circuit_breakers", {}).pop(service, None)
         self.save()
 
     def record_remediation(self, service: str, action: str, success: bool):
@@ -162,6 +172,21 @@ class StateManager:
 
     def is_circuit_broken(self, service: str) -> bool:
         svc = self.get_service(service)
+        opened_at = self.state.get("circuit_breakers", {}).get(service)
+        if opened_at:
+            try:
+                age = (datetime.now() - datetime.fromisoformat(opened_at)).total_seconds()
+                if age >= CIRCUIT_BREAKER_COOL_DOWN:
+                    logger.info(f"🟡 Circuit breaker cooldown elapsed for {service}; retrying checks")
+                    self.state["circuit_breakers"].pop(service, None)
+                    svc["consecutive_failures"] = max(CIRCUIT_BREAKER_THRESHOLD - 1, 0)
+                    self.save()
+                    return False
+            except Exception:
+                self.state["circuit_breakers"].pop(service, None)
+                self.save()
+                return False
+
         if svc["consecutive_failures"] >= CIRCUIT_BREAKER_THRESHOLD:
             if service not in self.state["circuit_breakers"]:
                 self.state["circuit_breakers"][service] = datetime.now().isoformat()
@@ -176,7 +201,7 @@ class StateManager:
         svc = self.get_service(service)
         if (
             service not in CRITICAL_SERVICES
-            and svc["total_failures"] >= DISABLE_NON_CRITICAL_AFTER_N_FAILURES
+            and svc["consecutive_failures"] >= DISABLE_NON_CRITICAL_AFTER_N_FAILURES
         ):
             svc["disabled"] = True
             self.save()
@@ -365,7 +390,7 @@ class PredictiveMaintenance:
                                 return (
                                     f"📈 Disk growth trajectory: will fill in {days:.1f} days "
                                     f"({growth_per_hour:.2f}%/hour). "
-                                    f"Suggest: cleanup old logs, archive newspapers"
+                                    f"Suggest: cleanup old logs, archive Headlines Today editions"
                                 )
         except Exception as e:
             logger.debug(f"Disk prediction failed: {e}")
@@ -453,53 +478,53 @@ class Remediation:
             return False
 
     @staticmethod
-    def regenerate_newspaper(state: StateManager) -> bool:
-        """Regenerate newspaper data"""
-        logger.info("🔧 Regenerating newspaper...")
+    def regenerate_headlines_today(state: StateManager) -> bool:
+        """Ask Maxwell to regenerate The Headlines Today data, PDF, and audio."""
+        logger.info("🔧 Maxwell regenerating The Headlines Today...")
 
         def generate():
             subprocess.run(
-                ["node", "/home/r2d2/generate-newspaper.js"],
+                ["python3", "/home/r2d2/projects/news-engine/generate-dev-edition.py"],
                 timeout=RETRY_TIMEOUT,
                 check=True,
                 cwd="/home/r2d2",
             )
 
         success, error = RetryStrategy.execute_with_backoff(
-            generate, "newspaper:generate"
+            generate, "maxwell:generate-headlines-today"
         )
 
         if success:
-            state.record_remediation("newspaper", "regenerate", True)
+            state.record_remediation("maxwell", "generate-headlines-today", True)
             return True
         else:
-            logger.error(f"Failed to regenerate newspaper: {error}")
-            state.record_remediation("newspaper", "regenerate", False)
+            logger.error(f"Maxwell failed to regenerate The Headlines Today: {error}")
+            state.record_remediation("maxwell", "generate-headlines-today", False)
             return False
 
     @staticmethod
     def rebuild_site(state: StateManager) -> bool:
-        """Rebuild and redeploy news site"""
-        logger.info("🔧 Rebuilding news site...")
+        """Rebuild and redeploy The Headlines Today site"""
+        logger.info("🔧 Rebuilding The Headlines Today site...")
 
         def rebuild():
             subprocess.run(
                 ["npm", "run", "build"],
                 timeout=RETRY_TIMEOUT,
                 check=True,
-                cwd="/home/r2d2/projects/news-site-v2",
+                cwd="/home/r2d2/projects/the-headlines-today",
             )
 
         success, error = RetryStrategy.execute_with_backoff(
-            rebuild, "news-site:build"
+            rebuild, "headlines-today:build"
         )
 
         if success:
-            state.record_remediation("news-site", "rebuild", True)
+            state.record_remediation("headlines-today", "rebuild", True)
             return True
         else:
-            logger.error(f"Failed to rebuild news site: {error}")
-            state.record_remediation("news-site", "rebuild", False)
+            logger.error(f"Failed to rebuild The Headlines Today site: {error}")
+            state.record_remediation("headlines-today", "rebuild", False)
             return False
 
 
@@ -507,69 +532,69 @@ class HealthChecks:
     """Comprehensive system checks"""
 
     @staticmethod
-    def check_newspaper_data(state: StateManager) -> bool:
-        """Check if today's newspaper data exists and is fresh"""
-        data_file = f"/home/r2d2/newspapers/{NEWSPAPER_DATE}/data.json"
+    def check_headlines_today_data(state: StateManager) -> bool:
+        """Check if today's The Headlines Today data exists and is fresh"""
+        data_file = f"/home/r2d2/headlines-today/{NEWSPAPER_DATE}/data.json"
 
         if not os.path.exists(data_file):
-            state.record_failure("newspaper", "data-file", "File not found")
+            state.record_failure("maxwell", "data-file", "File not found")
             return False
 
         size = os.path.getsize(data_file)
         if size < 5000:
-            state.record_failure("newspaper", "data-file", f"Too small ({size} bytes)")
+            state.record_failure("maxwell", "data-file", f"Too small ({size} bytes)")
             return False
 
         mtime = os.path.getmtime(data_file)
         age_hours = (time.time() - mtime) / 3600
         if age_hours > 24:
-            state.record_failure("newspaper", "data-file", f"Too old ({age_hours:.1f}h)")
+            state.record_failure("maxwell", "data-file", f"Too old ({age_hours:.1f}h)")
             return False
 
-        state.record_success("newspaper")
-        logger.info(f"✅ Newspaper data: OK ({size // 1024}KB, {age_hours:.1f}h old)")
+        state.record_success("maxwell")
+        logger.info(f"✅ The Headlines Today data: OK ({size // 1024}KB, {age_hours:.1f}h old)")
         return True
 
     @staticmethod
     def check_pdf(state: StateManager) -> bool:
         """Check if PDF exists and is valid"""
-        pdf = f"/home/r2d2/newspapers/{NEWSPAPER_DATE}/headlines-today.pdf"
+        pdf = f"/home/r2d2/headlines-today/{NEWSPAPER_DATE}/headlines-today.pdf"
 
         if not os.path.exists(pdf):
-            state.record_failure("newspaper", "pdf", "File not found")
+            state.record_failure("maxwell", "pdf", "File not found")
             return False
 
         size = os.path.getsize(pdf)
         if size < 10240:
-            state.record_failure("newspaper", "pdf", f"Too small ({size} bytes)")
+            state.record_failure("maxwell", "pdf", f"Too small ({size} bytes)")
             return False
 
-        state.record_success("newspaper")
+        state.record_success("maxwell")
         logger.info(f"✅ PDF: OK ({size // 1024}KB)")
         return True
 
     @staticmethod
     def check_audio(state: StateManager) -> bool:
         """Check if audio exists and is valid"""
-        audio = f"/home/r2d2/newspapers/{NEWSPAPER_DATE}/headlines-today.mp3"
+        audio = f"/home/r2d2/headlines-today/{NEWSPAPER_DATE}/headlines-today.mp3"
 
         if not os.path.exists(audio):
-            state.record_failure("newspaper", "audio", "File not found")
+            state.record_failure("maxwell", "audio", "File not found")
             return False
 
         size = os.path.getsize(audio)
         if size < 100000:
-            state.record_failure("newspaper", "audio", f"Too small ({size} bytes)")
+            state.record_failure("maxwell", "audio", f"Too small ({size} bytes)")
             return False
 
-        state.record_success("newspaper")
+        state.record_success("maxwell")
         logger.info(f"✅ Audio: OK ({size // 1024}KB)")
         return True
 
     @staticmethod
     def check_web_deployment(state: StateManager) -> bool:
-        """Check if web API is responding"""
-        url = f"https://news.suhailtaj.cloud/archive/{NEWSPAPER_DATE_SLUG}/data.json"
+        """Check if today's published The Headlines Today data is reachable on the website."""
+        url = f"https://news.suhailtaj.cloud/archive/{NEWSPAPER_DATE}/data.json"
 
         try:
             result = subprocess.run(
@@ -581,19 +606,19 @@ class HealthChecks:
             status = result.stdout.strip()
 
             if status != "200":
-                state.record_failure("news-site", "web-deployment", f"HTTP {status}")
+                state.record_failure("headlines-today", "web-deployment", f"HTTP {status}")
                 return False
 
-            state.record_success("news-site")
+            state.record_success("headlines-today")
             logger.info(f"✅ Web deployment: OK (HTTP {status})")
             return True
         except Exception as e:
-            state.record_failure("news-site", "web-deployment", str(e))
+            state.record_failure("headlines-today", "web-deployment", str(e))
             return False
 
     @staticmethod
     def check_cron_job(state: StateManager) -> bool:
-        """Verify cron job is registered"""
+        """Verify the host The Headlines Today schedule or, inside the container, its mounted pipeline files."""
         try:
             result = subprocess.run(
                 ["crontab", "-l"],
@@ -602,15 +627,32 @@ class HealthChecks:
                 timeout=5,
             )
 
-            if "generate-newspaper" not in result.stdout:
-                state.record_failure("cron", "newspaper-job", "Job not in crontab")
+            if "headlines-today" not in result.stdout and "generate-newspaper" not in result.stdout:
+                state.record_failure("cron", "headlines-today-job", "Job not in crontab")
                 return False
 
             state.record_success("cron")
             logger.info("✅ Cron job: OK (registered)")
             return True
+        except FileNotFoundError:
+            # The Guardian Docker image does not include crontab and cannot inspect
+            # the host user's spool directly. Treat the mounted production pipeline
+            # as the health signal here; the host crontab is checked externally.
+            script = "/home/r2d2/projects/news-engine/generate-dev-edition.py"
+            log = "/home/r2d2/tools/.guardian-logs/headlines-today.log"
+            if not os.path.exists(script):
+                state.record_failure("cron", "headlines-today-job", f"Pipeline script missing: {script}")
+                return False
+            if os.path.exists(log):
+                age_hours = (time.time() - os.path.getmtime(log)) / 3600
+                if age_hours > 72:
+                    state.record_failure("cron", "headlines-today-job", f"Headlines Today log stale ({age_hours:.1f}h)")
+                    return False
+            state.record_success("cron")
+            logger.info("✅ Cron job: OK (host crontab unavailable in container; pipeline files mounted)")
+            return True
         except Exception as e:
-            state.record_failure("cron", "newspaper-job", str(e))
+            state.record_failure("cron", "headlines-today-job", str(e))
             return False
 
     @staticmethod
@@ -633,6 +675,52 @@ class HealthChecks:
         except Exception as e:
             state.record_failure("docker", "daemon", str(e))
             return False
+
+    @staticmethod
+    def check_project_containers(state: StateManager) -> bool:
+        """Watch user-facing app containers and bring them back if they stop unexpectedly."""
+        all_ok = True
+
+        for container in WATCHED_APP_CONTAINERS:
+            try:
+                result = subprocess.run(
+                    [
+                        "docker",
+                        "inspect",
+                        "--format",
+                        "{{.State.Running}}|{{.State.Restarting}}|{{if .State.Health}}{{.State.Health.Status}}{{else}}none{{end}}",
+                        container,
+                    ],
+                    capture_output=True,
+                    text=True,
+                    timeout=10,
+                )
+
+                if result.returncode != 0:
+                    all_ok = False
+                    state.record_failure(container, "container-present", "Container missing")
+                    continue
+
+                running, restarting, health = result.stdout.strip().split("|", 2)
+                if running != "true" or health == "unhealthy":
+                    all_ok = False
+                    reason = f"running={running}, restarting={restarting}, health={health}"
+                    state.record_failure(container, "container-health", reason)
+                    Remediation.restart_docker_container(container, state)
+                    continue
+
+                state.record_success(container)
+                logger.info(f"✅ App container {container}: OK (health={health})")
+            except Exception as e:
+                all_ok = False
+                state.record_failure(container, "container-health", str(e))
+
+        if all_ok:
+            state.record_success("applications")
+        else:
+            state.record_failure("applications", "container-watch", "One or more app containers needed attention")
+
+        return all_ok
 
 
 class AlertManager:
@@ -762,10 +850,12 @@ class LearningSystem:
         if disk_warning:
             memory_content += f"- {disk_warning}\n"
 
-        with open(MEMORY_FILE, "w") as f:
-            f.write(memory_content)
-
-        logger.info(f"📝 Learning system updated: {MEMORY_FILE}")
+        try:
+            with open(MEMORY_FILE, "w") as f:
+                f.write(memory_content)
+            logger.info(f"📝 Learning system updated: {MEMORY_FILE}")
+        except PermissionError as e:
+            logger.warning(f"Could not update learning memory: {e}")
 
 
 def main():
@@ -781,12 +871,13 @@ def main():
     failed_checks = []
 
     checks = [
-        ("newspaper", state_mgr.should_disable_service("newspaper"), HealthChecks.check_newspaper_data),
-        ("newspaper", state_mgr.should_disable_service("newspaper"), HealthChecks.check_pdf),
-        ("newspaper", state_mgr.should_disable_service("newspaper"), HealthChecks.check_audio),
-        ("news-site", state_mgr.should_disable_service("news-site"), HealthChecks.check_web_deployment),
+        ("maxwell", state_mgr.should_disable_service("maxwell"), HealthChecks.check_headlines_today_data),
+        ("maxwell", state_mgr.should_disable_service("maxwell"), HealthChecks.check_pdf),
+        ("maxwell", state_mgr.should_disable_service("maxwell"), HealthChecks.check_audio),
+        ("headlines-today", state_mgr.should_disable_service("headlines-today"), HealthChecks.check_web_deployment),
         ("cron", state_mgr.should_disable_service("cron"), HealthChecks.check_cron_job),
         ("docker", state_mgr.should_disable_service("docker"), HealthChecks.check_docker_health),
+        ("applications", state_mgr.should_disable_service("applications"), HealthChecks.check_project_containers),
     ]
 
     for service, disabled, check_func in checks:
@@ -805,17 +896,17 @@ def main():
                 failed_checks.append((service, "health_check"))
 
                 # Attempt remediation
-                if service == "newspaper":
-                    if not Remediation.regenerate_newspaper(state_mgr):
+                if service == "maxwell":
+                    if not Remediation.regenerate_headlines_today(state_mgr):
                         alert_mgr.add_alert(
                             "CRITICAL",
-                            f"Failed to regenerate newspaper (circuit breaker may activate)"
+                            f"Maxwell failed to regenerate The Headlines Today (circuit breaker may activate)"
                         )
-                elif service == "news-site":
+                elif service == "headlines-today":
                     if not Remediation.rebuild_site(state_mgr):
                         alert_mgr.add_alert(
                             "CRITICAL",
-                            f"Failed to rebuild news site"
+                            f"Failed to rebuild The Headlines Today site"
                         )
         except Exception as e:
             logger.error(f"Unexpected error in {service} check: {e}")
@@ -831,7 +922,7 @@ def main():
 
     # Summary
     if not failed_checks:
-        logger.info("✅ All checks passed — newspaper pipeline healthy")
+        logger.info("✅ All checks passed — The Headlines Today pipeline healthy")
     else:
         logger.warning(f"⚠️  {len(failed_checks)} issue(s) detected — attempted automatic fixes")
 

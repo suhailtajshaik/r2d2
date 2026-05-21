@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """
 Generate Headlines Today edition using news-engine for DEV deployment.
-Outputs to dev archive: /home/r2d2/projects/news-site/public/archive-dev/YYYY/MM/DD/
+Outputs to dev archive: /home/r2d2/headlines-today/YYYY/MM/DD/
 
 FAST MODE (current):
 - Fetches RSS feeds
@@ -11,9 +11,9 @@ FAST MODE (current):
 - ~60 seconds total
 
 TODO: Full mode with web_search
-- Enable research layer (requires OpenClaw subagent context)
+- Enable research layer (requires Hermes subagent context)
 - This is the main purpose of news-engine: FACT-CHECKING with verification
-- When deployed as OpenClaw subagent: Add web_search-based research
+- When deployed as Hermes subagent: Add web_search-based research
 """
 
 import sys
@@ -28,14 +28,14 @@ from newspaper_runner_fast import FastNewspaperRunner
 
 def main():
     print("=" * 70)
-    print("📰 NEWS ENGINE - DEV EDITION BUILDER")
-    print("Generating for: https://lab.suhailtaj.cloud/the-headlines-today-dev/")
+    print("📰 MAXWELL - THE HEADLINES TODAY EDITION BUILDER")
+    print("Generating for: https://news-dev.suhailtaj.cloud/")
     print("=" * 70)
     print()
     
     try:
         # Use separate dev output directory
-        dev_output_dir = '/home/r2d2/projects/news-site/public/archive-dev'
+        dev_output_dir = '/home/r2d2/headlines-today'
         
         # Initialize fast runner (skips research layer)
         runner = FastNewspaperRunner(
@@ -59,7 +59,7 @@ def main():
             if result.get('audio_path'):
                 print(f"   Audio: {result['audio_path']}")
             print()
-            print("🌐 Live at: https://news-dev.suhailtaj.cloud/archive/...")
+            print("🌐 Shared archive: /home/r2d2/headlines-today (served by prod and dev)")
             print("-" * 70)
             return 0
         else:

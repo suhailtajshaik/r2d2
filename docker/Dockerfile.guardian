@@ -1,0 +1,25 @@
+FROM python:3.11-slim
+
+WORKDIR /guardian
+
+# Install system dependencies
+RUN apt-get update && apt-get install -y \
+    docker.io \
+    curl \
+    git \
+    nodejs \
+    npm \
+    && rm -rf /var/lib/apt/lists/*
+
+# Copy Guardian script
+COPY guardian.py /guardian/guardian.py
+COPY guardian-config.yaml /guardian/guardian-config.yaml
+
+# Create log directories
+RUN mkdir -p /tmp/guardian /tmp/guardian/diagnostics
+
+# Set permissions
+RUN chmod +x /guardian/guardian.py
+
+# Run Guardian
+CMD ["python3", "/guardian/guardian.py"]
